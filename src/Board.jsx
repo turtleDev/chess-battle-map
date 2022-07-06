@@ -4,13 +4,6 @@ const ranks = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
 class Board extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    //     // TODO: Board State
-    //     // this.state = {
-    //     //     rows: Array(8).fill(null).map(_ => Array(8).fill(null)),
-    //     // };
-    // }
     render() {
         return (
             <div className="board">
@@ -19,21 +12,24 @@ class Board extends React.Component {
         );
     }
     renderRanks() {
-        return ranks.map((val, idx) => {
+        return ranks.map((rank, rankIdx) => {
             return (
-                <div key={val} className={`rank ${val}`}>
-                    {this.renderFiles(idx)}                         
+                <div key={rank} className={`rank ${rank}`}>
+                    {this.renderFiles(rank, rankIdx)}                         
                 </div>
 
             );
         });
     }
-    renderFiles(rankIdx) {
-        return files.map((val, idx) => {
-            const cls = (rankIdx+idx)%2?"light":"dark";
+    renderFiles(rank, rankIdx) {
+        return files.map((file, fileIdx) => {
+            const cls = (rankIdx+fileIdx)%2?"light":"dark";
+            const boardKey = `${file}${rank}`;
             return (
-                <div key={val} className={`file ${val}`}>
-                    <div className={`square ${cls}`}></div>
+                <div key={file} className={`file ${file}`}>
+                    <div className={`square ${cls}`}>
+                        {this.props.state[boardKey]}
+                    </div>
                 </div>
             );
         });
