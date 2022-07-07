@@ -1,6 +1,6 @@
 import React from 'react';
 import Board from './Board';
-import { Chess } from 'chess.js';
+import Engine from './engine';
 
 class Game extends React.Component {
     constructor(props) {
@@ -8,28 +8,29 @@ class Game extends React.Component {
         this.state = {
             board: {},
         };
+        this._engine = null;
     }
-    handleSubmit(e) {
+    handleNext = _ => {
+        this.setState({board: this._engine.next()});
+    }
+    handlePrev = _ => {
+        this.setState({board: this._engine.prev()})
+    }
+    handleStart = e => {
         e.preventDefault();
-        let pgn = e.target.querySelector('textarea').value.trim();
-        let game = new Chess();
-
-        // todo: error checking
-        game.load_pgn(pgn);
-
-        let board = {};
-        let squares = [].concat.apply([], game.board());
-        squares.forEach(sq => {
-            if (!sq) {
-                return;
-            }
-            let piece = sq.type;
-            if (sq.color === "w") {
-                piece = sq.type.toUpperCase();
-            }
-            board[sq.square] = piece;
-        });
-        this.setState({board});
+        let pgn = e.target
+            .querySelector('textarea[label=gameData]')
+            .value
+            .trim();
+        
+        let engine;
+        try {
+            engine = new Engine(pgn);
+        } catch(e) {
+            console.error(`error parsing game data: ${e}`)
+        }
+        this.setState({board: engine.state()});
+        this._engine = engine;
     }
     render() {
         return (
@@ -38,10 +39,14 @@ class Game extends React.Component {
                 <Board state={this.state.board}/>
                 <form 
                     className="controls"
-                    onSubmit={e => this.handleSubmit(e)}>
+                    onSubmit={this.handleStart}>
                         <textarea label="gameData" rows={10}></textarea>
                         <input type="submit" label="start"></input>
                 </form>
+                <div>
+                    <button onClick={this.handlePrev}>previous</button>
+                    <button onClick={this.handleNext}>next</button>
+                </div>
             </div>
         );
     }

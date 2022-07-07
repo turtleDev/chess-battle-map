@@ -35,6 +35,10 @@ code {
     display: flex;
   }
   .square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
     height: 60px;
     width: 60px;
     &.light{
