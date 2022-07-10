@@ -28,7 +28,7 @@ class Board extends React.Component {
             return (
                 <div key={file} className={`file ${file}`}>
                     <div className={`square ${cls}`}>
-                        {this.props.state[boardKey]}
+                        {this.props.state[boardKey]?.piece}
                     </div>
                 </div>
             );

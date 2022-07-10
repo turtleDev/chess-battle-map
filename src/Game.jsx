@@ -10,6 +10,7 @@ class Game extends React.Component {
             autoPlayId: null,
         };
         this._engine = null;
+        this._autoplayDelay = 1000;
     }
     handleNext = _ => {
         this.setState({board: this._engine.next()});
@@ -39,7 +40,7 @@ class Game extends React.Component {
             this.setState({autoPlayId: null});
             return;
         }
-        let id = setInterval(this.handleNext, 1000);
+        const id = setInterval(this.handleNext, this._autoplayDelay);
         this.setState({autoPlayId: id});
     }
     render() {

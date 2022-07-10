@@ -22,8 +22,18 @@ class Engine {
             if (sq.color === "w") {
                 piece = sq.type.toUpperCase();
             }
-            board[sq.square] = piece;
+            board[sq.square] = { piece };
         });
+        return this.withSquareControl(board);
+    }
+    withSquareControl(src) {
+        const board = JSON.parse(JSON.stringify(src));
+        // pseudo code
+        // board.forEach(pos => {
+        //    this.controlledSquares(pos.piece).forEach(sq => {
+        //        board[sq].control += 1;
+        //    })
+        // })
         return board;
     }
     next() {
