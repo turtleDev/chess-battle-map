@@ -1,7 +1,5 @@
 import React from "react";
-
-const ranks = ["1", "2", "3", "4", "5", "6", "7", "8"];
-const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+import { Ranks, Files } from './coordinates'
 
 class Board extends React.Component {
     render() {
@@ -12,7 +10,7 @@ class Board extends React.Component {
         );
     }
     renderRanks() {
-        return ranks.map((rank, rankIdx) => {
+        return Ranks.map((rank, rankIdx) => {
             return (
                 <div key={rank} className={`rank ${rank}`}>
                     {this.renderFiles(rank, rankIdx)}                         
@@ -22,7 +20,7 @@ class Board extends React.Component {
         });
     }
     renderFiles(rank, rankIdx) {
-        return files.map((file, fileIdx) => {
+        return Files.map((file, fileIdx) => {
             const cls = (rankIdx+fileIdx)%2?"light":"dark";
             const boardKey = `${file}${rank}`;
             return (
