@@ -1,4 +1,5 @@
 import { Chess } from 'chess.js';
+import { isBlack } from './piece';
 import { Ranks, Files } from './coordinates';
 
 const flatten = values => [].concat.apply([], values);
@@ -63,7 +64,7 @@ function getControlledSquares(piece, square) {
         case 'p':
             const fileOffsets = [-1, 1]
             let rankOffset = 1;
-            if (belongsToBlack(piece)) {
+            if (isBlack(piece)) {
                 rankOffset = -1;
             }
             const [fileIdx, rankIdx] = parseCoordinate(square);
@@ -79,6 +80,8 @@ function getControlledSquares(piece, square) {
             })
 
             break;
+        default:
+            console.info(`getControlledSquares: not implemented ${piece}`);
     }
     return controlledSquares;
 }
@@ -89,10 +92,6 @@ function parseCoordinate(square) {
         throw Error(`invalid coordinate: ${square}`)
     }
     return [Files.indexOf(parts[0]), parseInt(parts[1]) - 1]
-}
-
-function belongsToBlack(piece) {
-    return piece === piece.toLowerCase();
 }
 
 function newEmptyBoard() {
