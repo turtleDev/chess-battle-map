@@ -25,5 +25,21 @@ describe('engine', () => {
             expect(board['a3'].piece).toEqual('P');
             expect(board['b4'].controlledBy).toEqual({'a3': 'P'});
         })
+        test('Nc3', () => {
+            const c = new ChessJS.Chess();
+            c.move('Nc3');
+            const engine = new Engine(c.pgn());
+            engine.next();
+            const board = engine.state();
+            expect(board['c3'].piece).toEqual('N');
+            let controlledSquares = [
+                'a4', 'b5', 'd5', 'e4', 'e2', 'd1', 'b1', 'a2'
+            ]
+            controlledSquares.forEach(sq => {
+                expect(board[sq].controlledBy).toEqual(
+                    expect.objectContaining({'c3': 'N'})
+                )
+            })
+        })
     })
 })

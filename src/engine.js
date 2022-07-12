@@ -60,6 +60,7 @@ function withSquareControl(src) {
 
 function getControlledSquares(piece, square) {
     const controlledSquares = [];
+    let fileIdx, rankIdx;
     switch (piece.toLowerCase()) {
         case 'p':
             const fileOffsets = [-1, 1]
@@ -67,7 +68,7 @@ function getControlledSquares(piece, square) {
             if (isBlack(piece)) {
                 rankOffset = -1;
             }
-            const [fileIdx, rankIdx] = parseCoordinate(square);
+            [fileIdx, rankIdx] = parseCoordinateIdx(square);
             fileOffsets.forEach(fileOffset => {
                 const file = Files[fileIdx + fileOffset];
                 const rank = Ranks[rankIdx + rankOffset];
@@ -78,15 +79,38 @@ function getControlledSquares(piece, square) {
                 }
                 controlledSquares.push(`${file}${rank}`);
             })
+        break;
+        case 'n':
+            let offsets = [
+                // file rank
+                [-2, 1],
+                [-1, 2],
+                [1, 2],
+                [2, 1],
+                [2, -1],
+                [1, -2],
+                [-1, -2],
+                [-2 ,-1]
+            ];
+            [fileIdx, rankIdx] = parseCoordinateIdx(square);
+            offsets.forEach(([fileOffset, rankOffset]) => {
+                const file = Files[fileIdx + fileOffset];
+                const rank = Ranks[rankIdx + rankOffset];
 
-            break;
+                // check that rank and file are valid
+                if (!(rank && file)) {
+                    return
+                }
+                controlledSquares.push(`${file}${rank}`);
+            })
+        break;
         default:
-            console.info(`getControlledSquares: not implemented ${piece}`);
+            return [];
     }
     return controlledSquares;
 }
 
-function parseCoordinate(square) {
+function parseCoordinateIdx(square) {
     const parts = square.trim().split('')
     if (parts.length !== 2) {
         throw Error(`invalid coordinate: ${square}`)
