@@ -51,7 +51,7 @@ class Board extends React.Component {
             }
         })
         if (control > 0) {
-            return {backgroundColor: 'RGBA(255, 165, 0, 0.4)'}
+            return {backgroundColor: 'RGBA(255, 0, 0, 0.4)'}
         }
         if (control < 0) {
             return {backgroundColor: 'RGBA(0, 255, 255, 0.4)'}

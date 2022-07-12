@@ -41,5 +41,47 @@ describe('engine', () => {
                 )
             })
         })
+        test("king's adjacent squares", () => {
+            let c = new ChessJS.Chess();
+            c.move('e4');
+            const engine = new Engine(c.pgn());
+            const board = engine.state();
+            
+            // white king
+            let controlledSquares = [
+                'd1', 'd2', 'e2', 'f2', 'f1'
+            ];
+            controlledSquares.forEach(sq => {
+                expect(board[sq].controlledBy).toEqual(
+                    expect.objectContaining({'e1': 'K'})
+                )
+            });
+
+            // black king
+            controlledSquares = [
+                'd8', 'd7', 'e7', 'f7', 'f8'
+            ];
+            controlledSquares.forEach(sq => {
+                expect(board[sq].controlledBy).toEqual(
+                    expect.objectContaining({'e8': 'k'})
+                )
+            });
+        })
+        // //bishop
+        // test('a4', () => {
+        //     const c = new ChessJS.Chess();
+        //     c.move('a4');
+        //     const engine = new Engine(c.pgn());
+        //     engine.next();
+        //     const board = engine.state();
+        //     expect(board['a4'].piece).toEqual('P');
+        //     expect(board['a5'].controlledBy).toEqual({});
+        //     let controlledSquares = ['a2', 'a3', 'a4', 'b1'];
+        //     controlledSquares.forEach(sq => {
+        //         expect(board[sq].controlledBy).toEqual({'a1': 'R'});
+        //     });
+        //     let uncontrolledSquare = 'a5'
+        //     expect(board[uncontrolledSquare].controlledBy).toEqual({});
+        // })
     })
 })
