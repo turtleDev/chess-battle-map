@@ -51,7 +51,7 @@ function withSquareControl(src) {
         if (!piece) {
             return;
         }
-        getControlledSquares(piece, sq).forEach(controlledSquare => {
+        getControlledSquares(sq, piece, src).forEach(controlledSquare => {
             board[controlledSquare].controlledBy[sq] = piece;
         })
     })
@@ -76,8 +76,10 @@ function controlledSquaresFromOffsets(offsets, square) {
     return controlledSquares;
 }
 
-function getControlledSquares(piece, square) {
+function getControlledSquares(square, piece, board) {
+    // [[file rank], ...]
     let offsets;
+
     switch (piece.toLowerCase()) {
         case 'p':
             let rankOffset = 1;
@@ -88,10 +90,9 @@ function getControlledSquares(piece, square) {
                 [-1, rankOffset],
                 [1, rankOffset]
             ];
-            return controlledSquaresFromOffsets(offsets, square);
+            break;
         case 'n':
             offsets = [
-                // file rank
                 [-2, 1],
                 [-1, 2],
                 [1, 2],
@@ -101,7 +102,7 @@ function getControlledSquares(piece, square) {
                 [-1, -2],
                 [-2 ,-1]
             ];
-            return controlledSquaresFromOffsets(offsets, square);
+            break;
         case 'k':
             offsets = [
                 [1, 0],
@@ -113,10 +114,73 @@ function getControlledSquares(piece, square) {
                 [0, -1],
                 [1, -1]
             ];
-            return controlledSquaresFromOffsets(offsets, square);
+            break;
+        case 'r':
+            offsets = generateRookControlledOffsets(square, board); 
+            break;
         default:
             return [];
     }
+    return controlledSquaresFromOffsets(offsets, square)
+}
+
+function generateRookControlledOffsets(square, board) {
+
+    let offsets = [];
+    let [fileIdx, rankIdx] = parseCoordinateIdx(square);
+
+    // scan vertically and horizontally in both direction until you hit a piece
+    let params = [
+        {
+            initial: fileIdx,
+            test: (idx) => idx < Files.length,
+            update: (current) => current+1,
+            gen: (idx) => [idx - fileIdx, 0],
+        },
+        {
+            initial: fileIdx,
+            test: idx => idx >= 0,
+            update: current => current -1,
+            gen: (idx) => [idx - fileIdx, 0]
+        },
+        {
+            initial: rankIdx,
+            test: idx => idx < Ranks.length,
+            update: current => current +1,
+            gen: (idx) => [0, idx - rankIdx]
+        },
+        {
+            initial: rankIdx,
+            test: idx => idx >= 0,
+            update: current => current -1,
+            gen: idx => [0, idx - rankIdx]
+        }
+    ]
+
+    params.forEach(param => {
+        for (let i = param.update(param.initial); param.test(i); i = param.update(i)) {
+            let offset = param.gen(i);
+            offsets.push(offset);
+            let sq = squareFromOffset(square, offset)
+            if (board[sq].piece) {
+                return;
+            }
+        }
+    });
+    return offsets;
+}
+
+function squareFromOffset(ref, offset) {
+    let [fileOffset, rankOffset] = offset;
+    let [fileIdx, rankIdx] = parseCoordinateIdx(ref);
+
+    const file = Files[fileIdx + fileOffset];
+    const rank = Ranks[rankIdx + rankOffset];
+
+    if (!(rank && file)) {
+        return null;
+    }
+    return `${file}${rank}`
 }
 
 function parseCoordinateIdx(square) {

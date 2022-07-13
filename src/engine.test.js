@@ -67,21 +67,23 @@ describe('engine', () => {
                 )
             });
         })
-        // //bishop
-        // test('a4', () => {
-        //     const c = new ChessJS.Chess();
-        //     c.move('a4');
-        //     const engine = new Engine(c.pgn());
-        //     engine.next();
-        //     const board = engine.state();
-        //     expect(board['a4'].piece).toEqual('P');
-        //     expect(board['a5'].controlledBy).toEqual({});
-        //     let controlledSquares = ['a2', 'a3', 'a4', 'b1'];
-        //     controlledSquares.forEach(sq => {
-        //         expect(board[sq].controlledBy).toEqual({'a1': 'R'});
-        //     });
-        //     let uncontrolledSquare = 'a5'
-        //     expect(board[uncontrolledSquare].controlledBy).toEqual({});
-        // })
+
+        test('rook (a4)', () => {
+            const c = new ChessJS.Chess();
+            c.move('a4');
+            const engine = new Engine(c.pgn());
+            engine.next();
+            const board = engine.state();
+            expect(board['a4'].piece).toEqual('P');
+            expect(board['a5'].controlledBy).toEqual({});
+            let controlledSquares = ['a2', 'a3', 'a4', 'b1'];
+            controlledSquares.forEach(sq => {
+                expect(board[sq].controlledBy).toEqual(
+                    expect.objectContaining({'a1': 'R'})
+                );
+            });
+            let uncontrolledSquare = 'a5'
+            expect(board[uncontrolledSquare].controlledBy).toEqual({});
+        })
     })
 })
