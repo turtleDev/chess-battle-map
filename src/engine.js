@@ -60,20 +60,10 @@ function withSquareControl(src) {
 
 // generate a list of squares attacked from {square}
 // offsets define which squares are attacked. {offsets} are of the form [[fileOffset, rankOffset],...]
-function controlledSquaresFromOffsets(offsets, square) {
-    let controlledSquares = [];
-    let [fileIdx, rankIdx] = parseCoordinateIdx(square);
-    offsets.forEach(([fileOffset, rankOffset]) => {
-        const file = Files[fileIdx + fileOffset];
-        const rank = Ranks[rankIdx + rankOffset];
-
-        // check that rank and file are valid
-        if (!(rank && file)) {
-            return
-        }
-        controlledSquares.push(`${file}${rank}`);
-    })
-    return controlledSquares;
+function squaresFromOffsets(refSquare, offsets) {
+    return offsets
+        .map(offset => squareFromOffset(refSquare, offset))
+        .filter(v => !!v);
 }
 
 function getControlledSquares(square, piece, board) {
@@ -121,7 +111,7 @@ function getControlledSquares(square, piece, board) {
         default:
             return [];
     }
-    return controlledSquaresFromOffsets(offsets, square)
+    return squaresFromOffsets(square, offsets)
 }
 
 function generateRookControlledOffsets(square, board) {
@@ -177,7 +167,7 @@ function squareFromOffset(ref, offset) {
     const file = Files[fileIdx + fileOffset];
     const rank = Ranks[rankIdx + rankOffset];
 
-    if (!(rank && file)) {
+    if (!(file && rank)) {
         return null;
     }
     return `${file}${rank}`
