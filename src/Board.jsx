@@ -1,6 +1,15 @@
 import React from "react";
 import { Ranks, Files } from './coordinates'
 import { isBlack } from "./piece";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faChessPawn,
+    faChessKnight,
+    faChessBishop, 
+    faChessRook,
+    faChessQueen, 
+    faChessKing
+} from "@fortawesome/free-solid-svg-icons";
 
 class Board extends React.Component {
     render() {
@@ -23,19 +32,51 @@ class Board extends React.Component {
     renderFiles(rank, rankIdx) {
         return Files.map((file, fileIdx) => {
             const cls = (rankIdx+fileIdx)%2?"light":"dark";
-            const boardKey = `${file}${rank}`;
-            const overlayStyle = this.getOverlayStyle(this.props.state[boardKey]?.controlledBy)
+            const square = `${file}${rank}`;
+            const piece = this.props.state[square]?.piece;
+            const pieceIcon = this.getPieceIcon(piece);
+            const overlayStyle = this.getOverlayStyle(this.props.state[square]?.controlledBy)
             return (
                 <div key={file} className={`file ${file}`}>
                     <div className={`square ${cls}`}>
                         <div className="control-overlay" style={overlayStyle}></div>
                         <div className="piece">
-                            {this.props.state[boardKey]?.piece}
+                            { pieceIcon }
                         </div>
                     </div>
                 </div>
             );
         });
+    }
+    getPieceIcon(piece) {
+        if(!piece) {
+            return null;
+        }
+        let icon = null;
+        switch(piece.toLowerCase()) {
+            case 'p':
+                icon = faChessPawn;
+                break;
+            case 'n':
+                icon = faChessKnight;
+                break;
+            case 'r':
+                icon = faChessRook;
+                break;
+            case 'b':
+                icon = faChessBishop;
+                break;
+            case 'q':
+                icon = faChessQueen;
+                break;
+            case 'k':
+                icon = faChessKing;
+                break;
+            default:
+                return null;
+        }
+        const color = isBlack(piece)?"darkslategrey":"whitesmoke";
+        return <FontAwesomeIcon icon={icon} color={color} size="2x"/>
     }
     getOverlayStyle(controllingPieces) {
         if (!(controllingPieces && Object.keys(controllingPieces).length)) {
