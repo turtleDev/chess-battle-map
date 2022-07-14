@@ -97,6 +97,10 @@ function getControlledSquares(square, piece, board) {
         case 'b':
             offsets = getBishopControlledOffsets(square, board);
             break;
+        case 'q':
+            offsets = getRookControlledOffsets(square, board)
+                .concat(getBishopControlledOffsets(square, board));
+            break;
         default:
             return [];
     }
@@ -111,7 +115,7 @@ function getRookControlledOffsets(square, board) {
     let params = [
         {
             test: offset => fileIdx + offset < Files.length,
-            gen: offset => [offset, 0],
+            gen: offset => [offset, 0]
         },
         {
             test: offset => fileIdx - offset >= 0,

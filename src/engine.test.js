@@ -1,4 +1,5 @@
 const Engine = require('./engine').default;
+const { Chess } = require('chess.js');
 const ChessJS = require('chess.js');
 
 describe('engine', () => {
@@ -83,7 +84,7 @@ describe('engine', () => {
                 );
             });
         })
-        test ('bishop (1. e3 b5)', () => {
+        test('bishop (1. e3 b5)', () => {
             let moves = ['e3', 'b5'];
             const c = new ChessJS.Chess();
             moves.forEach(m => c.move(m));
@@ -96,6 +97,41 @@ describe('engine', () => {
             controlledSquares.forEach(sq => {
                 expect(board[sq].controlledBy).toEqual(
                     expect.objectContaining({'f1': 'B'})
+                );
+            });
+        });
+        test('queen (1. e4 e5 2.Qh5)', () => {
+            let moves = [
+                'e4',
+                'e5',
+                'Qh5'
+            ];
+            const c = new ChessJS.Chess();
+            moves.forEach(m => c.move(m));
+            const engine = new Engine(c.pgn());
+            moves.forEach(_ => engine.next());
+            const board = engine.state();
+            expect(board['e4'].piece).toEqual('P');
+            expect(board['e5'].piece).toEqual('p');
+            let controlledSquares = [
+                'h2', 
+                'h3',
+                'h4',
+                'h6',
+                'h7',
+                'g4',
+                'g5',
+                'g6',
+                'f3',
+                'f5',
+                'f7',
+                'e2',
+                'e5',
+                'd1'
+            ];
+            controlledSquares.forEach(sq => {
+                expect(board[sq].controlledBy).toEqual(
+                    expect.objectContaining({'h5': 'Q'})
                 );
             });
         });
