@@ -82,8 +82,22 @@ describe('engine', () => {
                     expect.objectContaining({'a1': 'R'})
                 );
             });
-            let uncontrolledSquare = 'a5'
-            expect(board[uncontrolledSquare].controlledBy).toEqual({});
         })
-    })
+        test ('bishop (1. e3 b5)', () => {
+            let moves = ['e3', 'b5'];
+            const c = new ChessJS.Chess();
+            moves.forEach(m => c.move(m));
+            const engine = new Engine(c.pgn());
+            moves.forEach(_ => engine.next());
+            const board = engine.state();
+            expect(board['e3'].piece).toEqual('P');
+            expect(board['b5'].piece).toEqual('p');
+            let controlledSquares = ['e2', 'd3', 'c4', 'b5', 'g2'];
+            controlledSquares.forEach(sq => {
+                expect(board[sq].controlledBy).toEqual(
+                    expect.objectContaining({'f1': 'B'})
+                );
+            });
+        });
+    });
 })

@@ -58,13 +58,6 @@ function withSquareControl(src) {
     return board;
 }
 
-// generate a list of squares attacked from {square}
-// offsets define which squares are attacked. {offsets} are of the form [[fileOffset, rankOffset],...]
-function squaresFromOffsets(refSquare, offsets) {
-    return offsets
-        .map(offset => squareFromOffset(refSquare, offset))
-        .filter(v => !!v);
-}
 
 function getControlledSquares(square, piece, board) {
     // [[file rank], ...]
@@ -72,14 +65,7 @@ function getControlledSquares(square, piece, board) {
 
     switch (piece.toLowerCase()) {
         case 'p':
-            let rankOffset = 1;
-            if (isBlack(piece)) {
-                rankOffset = -1;
-            }
-            offsets = [
-                [-1, rankOffset],
-                [1, rankOffset]
-            ];
+            offsets = getPawnControlledOffsets(piece);
             break;
         case 'n':
             offsets = [
@@ -106,7 +92,10 @@ function getControlledSquares(square, piece, board) {
             ];
             break;
         case 'r':
-            offsets = generateRookControlledOffsets(square, board); 
+            offsets = getRookControlledOffsets(square, board); 
+            break;
+        case 'b':
+            offsets = getBishopControlledOffsets(square, board);
             break;
         default:
             return [];
@@ -114,50 +103,86 @@ function getControlledSquares(square, piece, board) {
     return squaresFromOffsets(square, offsets)
 }
 
-function generateRookControlledOffsets(square, board) {
+function getRookControlledOffsets(square, board) {
 
-    let offsets = [];
     let [fileIdx, rankIdx] = parseCoordinateIdx(square);
 
     // scan vertically and horizontally in both direction until you hit a piece
     let params = [
         {
-            initial: fileIdx,
-            test: (idx) => idx < Files.length,
-            update: (current) => current+1,
-            gen: (idx) => [idx - fileIdx, 0],
+            test: offset => fileIdx + offset < Files.length,
+            gen: offset => [offset, 0],
         },
         {
-            initial: fileIdx,
-            test: idx => idx >= 0,
-            update: current => current -1,
-            gen: (idx) => [idx - fileIdx, 0]
+            test: offset => fileIdx - offset >= 0,
+            gen: offset => [-offset, 0]
         },
         {
-            initial: rankIdx,
-            test: idx => idx < Ranks.length,
-            update: current => current +1,
-            gen: (idx) => [0, idx - rankIdx]
+            test: offset => rankIdx + offset < Ranks.length,
+            gen: offset => [0, offset]
         },
         {
-            initial: rankIdx,
-            test: idx => idx >= 0,
-            update: current => current -1,
-            gen: idx => [0, idx - rankIdx]
+            test: offset => rankIdx - offset >= 0,
+            gen: offset => [0, -offset]
         }
     ]
 
-    params.forEach(param => {
-        for (let i = param.update(param.initial); param.test(i); i = param.update(i)) {
-            let offset = param.gen(i);
+    return offsetGenerator(square, board, params);
+}
+
+function getBishopControlledOffsets(square, board) {
+    let [fileIdx, rankIdx] = parseCoordinateIdx(square);
+
+    // scan all diagonals until you hit a piece
+    let params = [
+        // top right
+        {
+            test: offset => (fileIdx + offset) < Files.length && (rankIdx + offset) < Ranks.length,
+            gen: offset => [offset,  offset],
+        },
+        // bottom right
+        {
+            test: offset => (fileIdx + offset) < Files.length && (rankIdx - offset) >= 0,
+            gen: offset => [offset, -offset]
+        },
+        // top left
+        {
+            test: offset => (fileIdx - offset) >= 0 && (rankIdx + offset) < Ranks.length,
+            gen: offset => [-offset, offset]
+        },
+        // bottom left
+        {
+            test: offset => (fileIdx - offset) >= 0 && (rankIdx - offset) >= 0,
+            gen: offset => [ -offset,  -offset]
+        }
+    ]
+    return offsetGenerator(square, board, params);
+}
+
+function offsetGenerator(square, board, scans) {
+    let offsets = [];
+    scans.forEach(scan => {
+        for (let i = 1; scan.test(i); i++) {
+            let offset = scan.gen(i);
             offsets.push(offset);
-            let sq = squareFromOffset(square, offset)
+            let sq = squareFromOffset(square, offset);
             if (board[sq].piece) {
                 return;
             }
         }
-    });
+    })
     return offsets;
+}
+
+function getPawnControlledOffsets(piece) {
+    let rankOffset = 1;
+    if (isBlack(piece)) {
+        rankOffset = -1;
+    }
+    return [
+        [-1, rankOffset],
+        [1, rankOffset]
+    ];
 }
 
 function squareFromOffset(ref, offset) {
@@ -171,6 +196,14 @@ function squareFromOffset(ref, offset) {
         return null;
     }
     return `${file}${rank}`
+}
+
+// generate a list of squares attacked from {square}
+// offsets define which squares are attacked. {offsets} are of the form [[fileOffset, rankOffset],...]
+function squaresFromOffsets(refSquare, offsets) {
+    return offsets
+        .map(offset => squareFromOffset(refSquare, offset))
+        .filter(v => !!v);
 }
 
 function parseCoordinateIdx(square) {
