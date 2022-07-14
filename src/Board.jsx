@@ -76,7 +76,7 @@ class Board extends React.Component {
                 return null;
         }
         const color = isBlack(piece)?"darkslategrey":"whitesmoke";
-        return <FontAwesomeIcon icon={icon} color={color} size="2x"/>
+        return <FontAwesomeIcon icon={icon} color={color} size="2x"/>;
     }
     getOverlayStyle(controllingPieces) {
         if (!(controllingPieces && Object.keys(controllingPieces).length)) {
@@ -92,13 +92,26 @@ class Board extends React.Component {
             }
         })
         if (control > 0) {
-            return {backgroundColor: 'RGBA(255, 0, 0, 0.4)'}
+            return {backgroundColor: `RGBA(255, 0, 0, ${controlIntensity(control)})`};
         }
         if (control < 0) {
-            return {backgroundColor: 'RGBA(0, 255, 255, 0.4)'}
+            return {backgroundColor: `RGBA(0, 255, 255, ${controlIntensity(control)})`};
         }
-        return {backgroundColor: 'RGBA(128, 128, 128, 0.4' }
+        return {backgroundColor: 'RGBA(100, 50, 150, 0.4)'};
     }
 }
+
+function controlIntensity(control) {
+    const max = 4
+    if (control < 0) {
+        control *= -1
+    }
+    if (control > max) {
+        control = max;
+    }
+    control = control / 10;
+    return 0.1 + control;
+}
+
 
 export default Board;
