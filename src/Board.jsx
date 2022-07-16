@@ -70,28 +70,9 @@ class Board extends React.Component {
         if(!piece) {
             return null;
         }
-        let icon = null;
-        switch(piece.toLowerCase()) {
-            case 'p':
-                icon = faChessPawn;
-                break;
-            case 'n':
-                icon = faChessKnight;
-                break;
-            case 'r':
-                icon = faChessRook;
-                break;
-            case 'b':
-                icon = faChessBishop;
-                break;
-            case 'q':
-                icon = faChessQueen;
-                break;
-            case 'k':
-                icon = faChessKing;
-                break;
-            default:
-                return null;
+        const icon = IconMapping[piece.toLowerCase()];
+        if (!icon) {
+            return null;
         }
         const color = isBlack(piece)?"darkslategrey":"whitesmoke";
         return <FontAwesomeIcon icon={icon} color={color} size="2x"/>;
@@ -138,6 +119,15 @@ function controlIntensity(control) {
     control = control / 10;
     return 0.1 + control;
 }
+
+const IconMapping = {
+    'p': faChessPawn,
+    'n': faChessKnight,
+    'b': faChessBishop,
+    'r': faChessRook,
+    'q': faChessQueen,
+    'k': faChessKing,
+};
 
 
 export default Board;
