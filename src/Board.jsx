@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Ranks, Files } from './coordinates'
 import { isBlack } from "./piece";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,8 +14,13 @@ import {
 class Board extends React.Component {
     render() {
         return (
-            <div className="board">
-                {this.renderRanks()}
+            <div className="board-container">
+                <div className="board">
+                    {this.renderRanks()}
+                </div>
+                <div className="arena">
+                    {this.renderPieces()}
+                </div>
             </div>
         );
     }
@@ -31,22 +36,35 @@ class Board extends React.Component {
     }
     renderFiles(rank, rankIdx) {
         return Files.map((file, fileIdx) => {
-            const cls = (rankIdx+fileIdx)%2?"light":"dark";
             const square = `${file}${rank}`;
-            const piece = this.props.state[square]?.piece;
-            const pieceIcon = this.getPieceIcon(piece);
-            const overlayStyle = this.getOverlayStyle(this.props.state[square]?.controlledBy)
+            const overlayStyle = this.getOverlayStyle(this.props.state[square]?.controlledBy);
+            const cls = `square ${square} ${(rankIdx+fileIdx)%2?"light":"dark"}`;
             return (
                 <div key={file} className={`file ${file}`}>
-                    <div className={`square ${cls}`}>
+                    <div className={cls}>
                         <div className="control-overlay" style={overlayStyle}></div>
-                        <div className="piece">
-                            { pieceIcon }
-                        </div>
                     </div>
                 </div>
             );
         });
+    }
+    componentDidUpdate() {
+        for (let [square, {piece}] of Object.entries(this.props.state)) {
+            if (!piece) {
+                continue;
+            }
+            const pieceRef = document.querySelector(`.piece.${square}`);
+            const squareRef = document.querySelector(`.square.${square}`);
+
+            pieceRef.style.left = `${computeOffsetLeft(squareRef, pieceRef)}px`;
+            pieceRef.style.top = `${computeOffsetTop(squareRef, pieceRef)}px`;
+        };
+    }
+    renderPieces() {
+        const board = this.props.state;
+        const keys = Object.keys(board).sort();
+        return keys.filter(sq => !!board[sq].piece)
+            .map(sq => <div className={`piece ${sq}`}>{this.getPieceIcon(board[sq].piece)}</div>)
     }
     getPieceIcon(piece) {
         if(!piece) {
@@ -99,6 +117,14 @@ class Board extends React.Component {
         }
         return {backgroundColor: 'RGBA(100, 50, 150, 0.4)'};
     }
+}
+
+function computeOffsetLeft(square, piece) {
+    return square.offsetLeft + (square.offsetWidth/2) - (piece.offsetWidth/2)
+}
+
+function computeOffsetTop(square, piece) {
+    return square.offsetTop + (square.offsetHeight/2) - (piece.offsetHeight/2)
 }
 
 function controlIntensity(control) {
