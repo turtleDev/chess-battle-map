@@ -63,6 +63,8 @@ class Board extends React.Component {
     renderPieces() {
         const board = this.props.state;
         const keys = Object.keys(board).sort();
+
+        // todo: stable identity for pieces
         return keys.filter(sq => !!board[sq].piece)
             .map(sq => <div className={`piece ${sq}`}>{this.getPieceIcon(board[sq].piece)}</div>)
     }

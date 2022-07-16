@@ -1,5 +1,4 @@
 const Engine = require('./engine').default;
-const { Chess } = require('chess.js');
 const ChessJS = require('chess.js');
 
 describe('engine', () => {
