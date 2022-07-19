@@ -8,11 +8,12 @@ class Engine {
     constructor(pgn) {
         let chess = new Chess();
         if (!chess.load_pgn(pgn)) {
-            throw Error("invalid pgn")
+            throw Error("invalid pgn");
         }
         this._chess = chess;
         this._history = this._chess.history();
         this._chess.reset();
+        this._nextMove = 0;
     }
     state() {
         let board = newEmptyBoard();
@@ -29,16 +30,31 @@ class Engine {
         return withSquareControl(board);
     }
     next() {
-        let move = this._history.shift();
+        let move = this._history[this._nextMove];
         if (move) {
             this._chess.move(move);
+            this._nextMove++;
         }
         return this.state();
     }
     prev() {
         let move = this._chess.undo()?.san;
         if (move) {
-            this._history.unshift(move);
+            --this._nextMove;
+        }
+        return this.state();
+    }
+    seek(moveIdx) {
+        if (moveIdx < 0) {
+            moveIdx = this._history.length + moveIdx;
+        }
+        if (moveIdx < this._history.length && moveIdx >= 0) {
+            this._chess.reset();
+            for (let i = 0; i < moveIdx; i++) {
+                let move = this._history[i];
+                this._chess.move(move);
+            }
+            this._nextMove = moveIdx;
         }
         return this.state();
     }

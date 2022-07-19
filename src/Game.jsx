@@ -4,7 +4,9 @@ import Engine from './engine';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
     faBackwardStep,
+    faBackwardFast,
     faForwardStep,
+    faForwardFast,
     faPlay,
     faPause,
 } from '@fortawesome/free-solid-svg-icons';
@@ -18,12 +20,6 @@ class Game extends React.Component {
         };
         this._engine = null;
         this._autoplayDelay = 1000;
-    }
-    handleNext = _ => {
-        this.setState({board: this._engine.next()});
-    }
-    handlePrev = _ => {
-        this.setState({board: this._engine.prev()})
     }
     handleStart = e => {
         e.preventDefault();
@@ -40,6 +36,18 @@ class Game extends React.Component {
         }
         this.setState({board: engine.state()});
         this._engine = engine;
+    }
+    handleNext = _ => {
+        this.setState({board: this._engine.next()});
+    }
+    handlePrev = _ => {
+        this.setState({board: this._engine.prev()})
+    }
+    handleGotoFirst = _ => {
+        this.setState({board: this._engine.seek(0)});
+    }
+    handleGotoLast = _ => {
+        this.setState({board: this._engine.seek(-1)});
     }
     toggleAutoPlay = _ => {
         if ( this.state.autoPlayId ) {
@@ -60,6 +68,7 @@ class Game extends React.Component {
                     <Board state={this.state.board}/>
                     {gameDataAvailable &&
                         <div className="controls">
+                            <FontAwesomeIcon icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x"/>
                             <FontAwesomeIcon icon={faBackwardStep} onClick={this.handlePrev} size="2x"/>
                             <FontAwesomeIcon 
                                 icon={autoPlayId?faPause:faPlay} 
@@ -67,6 +76,7 @@ class Game extends React.Component {
                                 size="2x"
                             />
                             <FontAwesomeIcon icon={faForwardStep} onClick={this.handleNext} size="2x"/>
+                            <FontAwesomeIcon icon={faForwardFast} onClick={this.handleGotoLast} size="2x"/>
                         </div>
                     }
 
