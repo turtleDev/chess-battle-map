@@ -19,10 +19,15 @@ code {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .controls {
+  .game-data-input {
     display: flex;
     flex-direction: column;
     margin: 10px;
+  }
+  .controls {
+    display: flex;
+    margin: 1rem;
+    justify-content: space-between;
   }
   .title {
     text-align: center;

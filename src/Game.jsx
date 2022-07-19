@@ -1,6 +1,13 @@
 import React from 'react';
 import Board from './Board';
 import Engine from './engine';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+    faBackwardStep,
+    faForwardStep,
+    faPlay,
+    faPause,
+} from '@fortawesome/free-solid-svg-icons';
 
 class Game extends React.Component {
     constructor(props) {
@@ -45,26 +52,31 @@ class Game extends React.Component {
     }
     render() {
         const gameDataAvailable = Object.keys(this.state.board).length !== 0;
+        const { autoPlayId } = this.state;
         return (
             <div className="game">
                 <h1 className="title">Chess Battle Map</h1>
-                <Board state={this.state.board}/>
+                <div className="board-container">
+                    <Board state={this.state.board}/>
+                    {gameDataAvailable &&
+                        <div className="controls">
+                            <FontAwesomeIcon icon={faBackwardStep} onClick={this.handlePrev} size="2x"/>
+                            <FontAwesomeIcon 
+                                icon={autoPlayId?faPause:faPlay} 
+                                onClick={this.toggleAutoPlay}
+                                size="2x"
+                            />
+                            <FontAwesomeIcon icon={faForwardStep} onClick={this.handleNext} size="2x"/>
+                        </div>
+                    }
+
+                </div>
                 <form 
-                    className="controls"
+                    className="game-data-input"
                     onSubmit={this.handleStart}>
                         <textarea label="gameData" rows={10}></textarea>
                         <input type="submit" label="start"></input>
                 </form>
-                {gameDataAvailable &&
-                    <div>
-                        <button onClick={this.handlePrev}>previous</button>
-                        <button onClick={this.handleNext}>next</button>
-                        <button onClick={this.toggleAutoPlay}>
-                            { this.state.autoPlayId ? 'pause': 'play'
-                            }
-                        </button>
-                    </div>
-                }
             </div>
         );
     }
