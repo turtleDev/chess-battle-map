@@ -27,20 +27,9 @@ code {
   .title {
     text-align: center;
   }
-  .board-container {
-    position: relative;
-    .board {
-      display: flex;
-      flex-direction: column-reverse;
-    }
-    .arena {
-      position: absolute;
-      top: 0;
-      .piece {
-        position: absolute;
-        transition: all 0.4s;
-      }
-    }
+  .board {
+    display: flex;
+    flex-direction: column-reverse;
   }
   .rank {
     display: flex;
