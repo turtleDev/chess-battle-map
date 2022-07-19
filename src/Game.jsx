@@ -37,22 +37,39 @@ class Game extends React.Component {
         this.setState({board: engine.state()});
         this._engine = engine;
     }
-    handleNext = _ => {
+    handleNext = e => {
+
+        // handleNext is also called from setInterval.
+        // in case this is an actual event fired in response to user input,
+        // then we wanna disable autoplay.
+        if (e) {
+            this.stopAutoPlay();
+        }
         this.setState({board: this._engine.next()});
     }
     handlePrev = _ => {
-        this.setState({board: this._engine.prev()})
+        this.stopAutoPlay();
+        this.setState({board: this._engine.prev()});
     }
     handleGotoFirst = _ => {
+        this.stopAutoPlay();
         this.setState({board: this._engine.seek(0)});
     }
     handleGotoLast = _ => {
+        this.stopAutoPlay();
         this.setState({board: this._engine.seek(-1)});
     }
-    toggleAutoPlay = _ => {
-        if ( this.state.autoPlayId ) {
-            clearInterval(this.state.autoPlayId);
+    stopAutoPlay = _ => {
+        let { autoPlayId } = this.state;
+        if ( autoPlayId ) {
+            clearInterval(autoPlayId);
             this.setState({autoPlayId: null});
+        }
+    }
+    toggleAutoPlay = _ => {
+        let { autoPlayId } = this.state;
+        if ( autoPlayId ) {
+            this.stopAutoPlay();
             return;
         }
         const id = setInterval(this.handleNext, this._autoplayDelay);
