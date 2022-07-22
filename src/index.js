@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
+// import 'milligram';
 import Game from './Game';
 // import Board from './Board'
 // import reportWebVitals from './reportWebVitals';

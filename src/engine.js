@@ -15,6 +15,12 @@ class Engine {
         this._chess.reset();
         this._nextMove = 0;
     }
+    history() {
+        return {
+            moves: Array.from(this._history),
+            current: this._nextMove - 1
+        }
+    }
     state() {
         let board = newEmptyBoard();
         flatten(this._chess.board()).forEach(sq => {

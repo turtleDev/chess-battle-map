@@ -75,28 +75,58 @@ class Game extends React.Component {
         const id = setInterval(this.handleNext, this._autoplayDelay);
         this.setState({autoPlayId: id});
     }
+    history() {
+        if (!this._engine) {
+            return null;
+        }
+        const hist = this._engine.history();
+        let rows = [];
+        for ( let i = 0; i < hist.moves.length; i += 2) {
+            rows.push(
+                <tr key={i}>
+                    <td>{(i/2) + 1}</td>
+                    <td className={getRowClass(i, hist.current)}>{hist.moves[i]}</td>
+                    <td className={getRowClass(i+1, hist.current)}>{hist.moves[i+1]}</td>
+                </tr>
+            )
+        }
+        return rows;
+    }
     render() {
         const gameDataAvailable = Object.keys(this.state.board).length !== 0;
         const { autoPlayId } = this.state;
+        let hist = [];
+        if (this._engine) {
+            hist = this._engine.history().moves;
+        }
         return (
             <div className="game">
                 <h1 className="title">Chess Battle Map</h1>
-                <div className="board-container">
-                    <Board state={this.state.board}/>
-                    {gameDataAvailable &&
-                        <div className="controls">
-                            <FontAwesomeIcon icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x"/>
-                            <FontAwesomeIcon icon={faBackwardStep} onClick={this.handlePrev} size="2x"/>
-                            <FontAwesomeIcon 
-                                icon={autoPlayId?faPause:faPlay} 
-                                onClick={this.toggleAutoPlay}
-                                size="2x"
-                            />
-                            <FontAwesomeIcon icon={faForwardStep} onClick={this.handleNext} size="2x"/>
-                            <FontAwesomeIcon icon={faForwardFast} onClick={this.handleGotoLast} size="2x"/>
-                        </div>
-                    }
+                <div className="game-container">
+                    <div className="board-container">
+                        <Board state={this.state.board}/>
+                        {gameDataAvailable &&
+                            <div className="controls">
+                                <FontAwesomeIcon icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x"/>
+                                <FontAwesomeIcon icon={faBackwardStep} onClick={this.handlePrev} size="2x"/>
+                                <FontAwesomeIcon 
+                                    icon={autoPlayId?faPause:faPlay} 
+                                    onClick={this.toggleAutoPlay}
+                                    size="2x"
+                                />
+                                <FontAwesomeIcon icon={faForwardStep} onClick={this.handleNext} size="2x"/>
+                                <FontAwesomeIcon icon={faForwardFast} onClick={this.handleGotoLast} size="2x"/>
+                            </div>
+                        }
 
+                    </div>
+                    <div className="history">
+                        <table>
+                            <tbody>
+                                {this.history()}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <form 
                     className="game-data-input"
@@ -107,6 +137,13 @@ class Game extends React.Component {
             </div>
         );
     }
+}
+
+function getRowClass(idx, current) {
+    if (idx === current) {
+        return "current-move";
+    }
+    return "";
 }
 
 export default Game;
