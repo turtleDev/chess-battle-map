@@ -64,6 +64,9 @@ class Engine {
         }
         return this.state();
     }
+    isGameEnd() {
+        return this._history.length === this._nextMove;
+    }
 }
 
 function withSquareControl(src) {

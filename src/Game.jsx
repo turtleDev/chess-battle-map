@@ -46,6 +46,9 @@ class Game extends React.Component {
             this.stopAutoPlay();
         }
         this.setState({board: this._engine.next()});
+        if (this._engine.isGameEnd()) {
+            this.stopAutoPlay();
+        }
     }
     handlePrev = _ => {
         this.stopAutoPlay();
@@ -95,10 +98,6 @@ class Game extends React.Component {
     render() {
         const gameDataAvailable = Object.keys(this.state.board).length !== 0;
         const { autoPlayId } = this.state;
-        let hist = [];
-        if (this._engine) {
-            hist = this._engine.history().moves;
-        }
         return (
             <div className="game">
                 <h1 className="title">Chess Battle Map</h1>
