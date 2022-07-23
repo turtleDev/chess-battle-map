@@ -93,31 +93,13 @@ function getControlledSquares(square, piece, board) {
             offsets = getPawnControlledOffsets(piece);
             break;
         case 'n':
-            offsets = [
-                [-2, 1],
-                [-1, 2],
-                [1, 2],
-                [2, 1],
-                [2, -1],
-                [1, -2],
-                [-1, -2],
-                [-2 ,-1]
-            ];
+            offsets = knightControlledOffsets;
             break;
         case 'k':
-            offsets = [
-                [1, 0],
-                [1, 1],
-                [0, 1],
-                [-1, 1],
-                [-1, 0],
-                [-1, -1],
-                [0, -1],
-                [1, -1]
-            ];
+            offsets = kingControlledOffsets;
             break;
         case 'r':
-            offsets = getRookControlledOffsets(square, board); 
+            offsets = getRookControlledOffsets(square, board);
             break;
         case 'b':
             offsets = getBishopControlledOffsets(square, board);
@@ -167,7 +149,7 @@ function getBishopControlledOffsets(square, board) {
         // top right
         {
             test: offset => (fileIdx + offset) < Files.length && (rankIdx + offset) < Ranks.length,
-            gen: offset => [offset,  offset],
+            gen: offset => [offset, offset],
         },
         // bottom right
         {
@@ -182,7 +164,7 @@ function getBishopControlledOffsets(square, board) {
         // bottom left
         {
             test: offset => (fileIdx - offset) >= 0 && (rankIdx - offset) >= 0,
-            gen: offset => [ -offset,  -offset]
+            gen: offset => [-offset, -offset]
         }
     ]
     return offsetGenerator(square, board, params);
@@ -213,6 +195,28 @@ function getPawnControlledOffsets(piece) {
         [1, rankOffset]
     ];
 }
+
+const knightControlledOffsets = [
+    [-2, 1],
+    [-1, 2],
+    [1, 2],
+    [2, 1],
+    [2, -1],
+    [1, -2],
+    [-1, -2],
+    [-2, -1]
+];
+
+const kingControlledOffsets = [
+    [1, 0],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+    [-1, -1],
+    [0, -1],
+    [1, -1]
+];
 
 function squareFromOffset(ref, offset) {
     let [fileOffset, rankOffset] = offset;
