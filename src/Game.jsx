@@ -20,6 +20,17 @@ class Game extends React.Component {
         };
         this._engine = null;
         this._autoplayDelay = 1000;
+
+        // hack: load game data from url, if present.
+        const gameData = (new URL(window.location)).searchParams.get('game');
+        if (gameData) {
+            console.log('loading game data ...');
+            console.log(atob(gameData));
+            setTimeout(() => {
+                document.querySelector('textarea[label=gameData]').innerHTML = atob(gameData);
+                document.querySelector('form > input[type=submit]').click();
+            }, 100);
+        }
     }
     handleStart = e => {
         e.preventDefault();
