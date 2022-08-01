@@ -24,8 +24,7 @@ class Game extends React.Component {
         // hack: load game data from url, if present.
         const gameData = (new URL(window.location)).searchParams.get('game');
         if (gameData) {
-            console.log('loading game data ...');
-            console.log(atob(gameData));
+            console.log('found game data in page url, loading ...');
             setTimeout(() => {
                 document.querySelector('textarea[label=gameData]').innerHTML = atob(gameData);
                 document.querySelector('form > input[type=submit]').click();
