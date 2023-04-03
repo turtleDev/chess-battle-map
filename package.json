@@ -1,5 +1,6 @@
 {
   "name": "chess-battle-map",
+  "homepage": "https://turtledev.github.io/chess-battle-map",
   "version": "0.1.0",
   "private": true,
   "jest": {
