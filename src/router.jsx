@@ -11,7 +11,7 @@ export default createBrowserRouter([
         element: <Home/>
     },
     {
-        path: "/demo",
+        path: "/game",
         element: <Game/>
     },
 ], {
