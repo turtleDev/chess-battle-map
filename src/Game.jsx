@@ -11,7 +11,7 @@ import {
     faPause,
 } from '@fortawesome/free-solid-svg-icons';
 
-class Game extends React.Component {
+export default class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -154,5 +154,3 @@ function getRowClass(idx, current) {
     }
     return "";
 }
-
-export default Game;
