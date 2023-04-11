@@ -15,5 +15,5 @@ export default createBrowserRouter([
         element: <Game/>
     },
 ], {
-    basename: "/chess-battle-map"
+    basename: new URL(require("../package.json").homepage).pathname,
 });
