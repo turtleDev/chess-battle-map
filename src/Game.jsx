@@ -22,7 +22,7 @@ export default class Game extends React.Component {
         this._autoplayDelay = 1000;
 
         // hack: load game data from url, if present.
-        const gameData = (new URL(window.location)).searchParams.get('game');
+        const gameData = (new URL(window.location)).searchParams.get('data');
         if (gameData) {
             console.log('found game data in page url, loading ...');
             setTimeout(() => {
@@ -110,7 +110,6 @@ export default class Game extends React.Component {
         const { autoPlayId } = this.state;
         return (
             <div className="game">
-                <h1 className="title">Chess Battle Map</h1>
                 <div className="game-container">
                     <div className="board-container">
                         <Board state={this.state.board}/>

@@ -4,6 +4,7 @@ import {
 
 import Game from './Game';
 import Home from './Home';
+import Base from './Layout';
 
 function basenameFromPackage() {
     const url = new URL(require("../package.json").homepage)
@@ -12,12 +13,18 @@ function basenameFromPackage() {
 
 export default createBrowserRouter([
     {
-        path: "/",
-        element: <Home/>
-    },
-    {
-        path: "/game",
-        element: <Game/>
+        path: '/',
+        element: <Base/>,
+        children: [
+            {
+                path: '/',
+                element: <Home/>
+            },
+            {
+                path: "/game",
+                element: <Game/>
+            },
+        ]
     },
 ], {
     basename: basenameFromPackage(),
