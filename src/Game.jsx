@@ -137,7 +137,7 @@ export default class Game extends React.Component {
 
                     </div>
                 </div>
-                <div className="history">
+                <div className="history hidden lg:block">
                     <table>
                         <tbody>
                             {this.history()}

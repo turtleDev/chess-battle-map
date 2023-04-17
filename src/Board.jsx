@@ -38,7 +38,7 @@ class Board extends React.Component {
             const overlayStyle = this.getOverlayStyle(this.props.state[square]?.controlledBy)
             return (
                 <div key={file} className={`file ${file}`}>
-                    <div className={`square ${cls}`}>
+                    <div className={`square ${cls} w-11 h-11 md:w-16 md:h-16`}>
                         <div className="control-overlay" style={overlayStyle}></div>
                         <div className="piece">
                             { pieceIcon }
@@ -59,6 +59,8 @@ class Board extends React.Component {
         const color = isBlack(piece)?"darkslategrey":"whitesmoke";
         return <FontAwesomeIcon icon={icon} color={color} size="2x"/>;
     }
+
+    // rename this to getSquarePressure ?
     getOverlayStyle(controllingPieces) {
         if (!(controllingPieces && Object.keys(controllingPieces).length)) {
             return {}
