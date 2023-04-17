@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Board from './Board';
 import Engine from './engine';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,6 +17,7 @@ export default class Game extends React.Component {
         this.state = {
             board: {},
             autoPlayId: null,
+            showSource: false,
         };
         this._engine = null;
         this._autoplayDelay = 1000;
@@ -107,7 +108,7 @@ export default class Game extends React.Component {
     }
     render() {
         const gameDataAvailable = Object.keys(this.state.board).length !== 0;
-        const { autoPlayId } = this.state;
+        const { autoPlayId, showSource } = this.state;
         return (
             <div className="game">
                 <div className="game-container">
@@ -128,12 +129,20 @@ export default class Game extends React.Component {
                             </div>
                         }
 
-                        <form 
-                            className="game-data-input"
-                            onSubmit={this.handleStart}>
-                                <textarea label="gameData" rows={10}></textarea>
-                                <input type="submit" label="start"></input>
-                        </form>
+                        <button 
+                            className={"btn my-4 w-full " + (showSource?"bg-orange-700":"")}
+                            onClick={() => this.setState({showSource: !showSource})}
+                        >
+                            view source
+                        </button>
+                        <div className={showSource?"":"hidden"}>
+                            <form 
+                                className={"game-data-input"}
+                                onSubmit={this.handleStart}>
+                                    <textarea label="gameData" rows={10}></textarea>
+                                    <input type="submit" label="start"></input>
+                            </form>
+                        </div>
 
                     </div>
                 </div>
@@ -148,6 +157,7 @@ export default class Game extends React.Component {
         );
     }
 }
+
 
 function getRowClass(idx, current) {
     if (idx === current) {

@@ -1,5 +1,13 @@
 @tailwind base;
 @tailwind utilities;
+@tailwind components;
+
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 mt-4 border rounded font-bold bg-orange-600 text-[#303240] border-0;
+  }
+}
 
 body {
   background-color: #303240;
