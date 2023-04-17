@@ -17,26 +17,23 @@ code {
     monospace;
 }
 
+.history {
+  margin: 0 2em;
+  td {
+    padding: 2px 4px;
+  }
+  .current-move {
+    background-color: #b84a0a;
+    color: #f0ddb2;
+  }
+}
+
 .game {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
-  align-items: center;
   .game-container {
     position: relative;
-    .history {
-      margin: 0 2em;
-      position: absolute;
-      top: 0;
-      left: 100%;
-      td {
-        padding: 2px 4px;
-      }
-      .current-move {
-        background-color: #b84a0a;
-        color: #f0ddb2;
-      }
-    }
   }
   .game-data-input {
     display: flex;

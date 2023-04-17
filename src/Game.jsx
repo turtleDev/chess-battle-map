@@ -115,33 +115,35 @@ export default class Game extends React.Component {
                         <Board state={this.state.board}/>
                         {gameDataAvailable &&
                             <div className="controls">
-                                <FontAwesomeIcon icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x"/>
-                                <FontAwesomeIcon icon={faBackwardStep} onClick={this.handlePrev} size="2x"/>
-                                <FontAwesomeIcon 
+                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x"/>
+                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faBackwardStep} onClick={this.handlePrev} size="2x"/>
+                                <FontAwesomeIcon
+                                    className="hover:cursor-pointer" 
                                     icon={autoPlayId?faPause:faPlay} 
                                     onClick={this.toggleAutoPlay}
                                     size="2x"
                                 />
-                                <FontAwesomeIcon icon={faForwardStep} onClick={this.handleNext} size="2x"/>
-                                <FontAwesomeIcon icon={faForwardFast} onClick={this.handleGotoLast} size="2x"/>
+                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faForwardStep} onClick={this.handleNext} size="2x"/>
+                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faForwardFast} onClick={this.handleGotoLast} size="2x"/>
                             </div>
                         }
 
-                    </div>
-                    <div className="history">
-                        <table>
-                            <tbody>
-                                {this.history()}
-                            </tbody>
-                        </table>
+                        <form 
+                            className="game-data-input"
+                            onSubmit={this.handleStart}>
+                                <textarea label="gameData" rows={10}></textarea>
+                                <input type="submit" label="start"></input>
+                        </form>
+
                     </div>
                 </div>
-                <form 
-                    className="game-data-input"
-                    onSubmit={this.handleStart}>
-                        <textarea label="gameData" rows={10}></textarea>
-                        <input type="submit" label="start"></input>
-                </form>
+                <div className="history">
+                    <table>
+                        <tbody>
+                            {this.history()}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }
