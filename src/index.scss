@@ -27,9 +27,11 @@ code {
 
 .history {
   margin: 0 2em;
+
   td {
     padding: 2px 4px;
   }
+
   .current-move {
     background-color: #b84a0a;
     color: #f0ddb2;
@@ -40,47 +42,60 @@ code {
   display: flex;
   flex-direction: row;
   justify-content: center;
+
   .game-container {
     position: relative;
   }
+
   .game-data-input {
     display: flex;
     flex-direction: column;
     margin: 10px;
   }
+
   .controls {
     display: flex;
     margin: 1rem;
     justify-content: space-between;
   }
+
   .title {
     text-align: center;
   }
-  .board {
-    display: flex;
-    flex-direction: column-reverse;
+
+}
+
+.board {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.rank {
+  display: flex;
+}
+
+
+.square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+
+  &.light {
+    background-color: #f0ddb2;
   }
-  .rank {
-    display: flex;
+
+  &.dark {
+    background-color: #b8895f;
   }
-  .square {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    &.light{
-      background-color: #f0ddb2;
-    }
-    &.dark {
-      background-color: #b8895f;
-    }
-    .control-overlay {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    .piece {
-      position: absolute;
-    }
+
+  .control-overlay {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .piece {
+    position: absolute;
   }
 }
