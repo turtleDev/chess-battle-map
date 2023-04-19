@@ -23,6 +23,7 @@ export default class Game extends React.Component {
         this._autoplayDelay = 1000;
 
         // hack: load game data from url, if present.
+        // this needs to come via the loader
         const gameData = (new URL(window.location)).searchParams.get('data');
         if (gameData) {
             console.log('found game data in page url, loading ...');
@@ -44,6 +45,7 @@ export default class Game extends React.Component {
             engine = new Engine(pgn);
         } catch(e) {
             console.error(`error parsing game data: ${e}`)
+            throw e;
         }
         this.setState({board: engine.state()});
         this._engine = engine;
@@ -140,7 +142,7 @@ export default class Game extends React.Component {
                                 className={"game-data-input"}
                                 onSubmit={this.handleStart}>
                                     <textarea label="gameData" rows={10}></textarea>
-                                    <input type="submit" label="start"></input>
+                                    <input className="btn" type="submit" label="start"></input>
                             </form>
                         </div>
 
