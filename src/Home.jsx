@@ -20,8 +20,9 @@ export default function Home() {
 
     return (
         <div className="home">
-            <div className="flex justify-around max-w-[75%] mx-auto mt-20">
-                <div className=" flex flex-col justify-center">
+            <div className="flex justify-around max-w-6xl mx-auto mt-20">
+                <Board state={boardState}/>
+                <div className="flex flex-col justify-center mx-12">
                     <p className="text-9xl">!!</p>
                     <p className="text-4xl mt-8">
                         Visualise square control from any online chess game.
@@ -35,7 +36,6 @@ export default function Home() {
                         </button>
                     </Link>
                 </div>
-                <Board state={boardState}/>
             </div>
         </div>
     )

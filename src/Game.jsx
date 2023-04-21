@@ -112,7 +112,7 @@ export default class Game extends React.Component {
         const gameDataAvailable = Object.keys(this.state.board).length !== 0;
         const { autoPlayId, showSource } = this.state;
         return (
-            <div className="game">
+            <div className="game mt-10">
                 <div className="game-container relative">
                     <div className="board-container">
                         <Board state={this.state.board}/>
