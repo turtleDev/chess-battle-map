@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom';
 import Board from './Board';
 import Engine from './engine';
 
-export default function Home() {
+const ANIMATION_INTERVAL = 900;
 
-    const engine = useMemo(() => new Engine('1. e4 c5'), []);
+export default function Home() {
+    const src = "1. e4 c5";
+    const engine = useMemo(() => new Engine(src), []);
     const [boardState, setBoardState] = useState(engine.state());
     useEffect(() => {
-        for (let i = 0; i < 2; i++) {
+        const moves = src.split(" ").length;
+        for (let i = 0; i < moves; i++) {
             setTimeout(() => {
-                engine.next();
-                setBoardState(engine.state());
-            }, 900 * (i+1));
+                setBoardState(engine.next());
+            }, ANIMATION_INTERVAL * (i+1));
         }
     }, [engine])
 
