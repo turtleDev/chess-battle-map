@@ -29,8 +29,8 @@ export default class Game extends React.Component {
             console.log('found game data in page url, loading ...');
             setTimeout(() => {
                 document.querySelector('textarea[label=gameData]').innerHTML = atob(gameData);
-                document.querySelector('form > input[type=submit]').click();
-            }, 100);
+                document.querySelector('form.game-data-input > input[type=submit]').click();
+            }, 0);
         }
     }
     handleStart = e => {
@@ -113,7 +113,7 @@ export default class Game extends React.Component {
         const { autoPlayId, showSource } = this.state;
         return (
             <div className="game">
-                <div className="game-container">
+                <div className="game-container relative">
                     <div className="board-container">
                         <Board state={this.state.board}/>
                         {gameDataAvailable &&
@@ -132,28 +132,28 @@ export default class Game extends React.Component {
                         }
 
                         <button 
-                            className={"btn my-4 w-full " + (showSource?"bg-orange-700":"")}
+                            className={"btn my-4 w-full " + (showSource?"bg-slate-400":"")}
                             onClick={() => this.setState({showSource: !showSource})}
                         >
                             view source
                         </button>
                         <div className={showSource?"":"hidden"}>
                             <form 
-                                className={"game-data-input"}
+                                className="game-data-input"
                                 onSubmit={this.handleStart}>
-                                    <textarea label="gameData" rows={10}></textarea>
+                                    <textarea className="border-2 p-2" label="gameData" rows={10}></textarea>
                                     <input className="btn" type="submit" label="start"></input>
                             </form>
                         </div>
 
                     </div>
-                </div>
-                <div className="history hidden lg:block">
-                    <table>
-                        <tbody>
-                            {this.history()}
-                        </tbody>
-                    </table>
+                    <div className="history hidden lg:block absolute top-0 -right-[11rem]">
+                        <table>
+                            <tbody>
+                                {this.history()}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         );
