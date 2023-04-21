@@ -20,7 +20,7 @@ export default function Home() {
 
     return (
         <div className="home">
-            <div className="flex flex-col-reverse md:flex-row justify-around max-w-6xl mx-auto md:mt-20 ">
+            <div className="flex flex-col md:flex-row justify-around max-w-6xl mx-auto mt-8 md:mt-20 ">
                 <Board state={boardState}/>
                 <div className="flex flex-col justify-center mt-4 md:mt-0 md:mx-12">
                     <p className="text-4xl font-bold md:text-8xl">!!</p>
