@@ -38,7 +38,7 @@ class Board extends React.Component {
             const overlayStyle = this.getOverlayStyle(this.props.state[square]?.controlledBy)
             return (
                 <div key={file} className={`file ${file}`}>
-                    <div className={`square ${cls} w-[12.5vw] h-[12.5vw] md:w-16 md:h-16`}>
+                    <div className={`square ${cls} w-[calc(calc(100vw-2rem)/8)] h-[calc(calc(100vw-2rem)/8)] md:w-16 md:h-16`}>
                         <div className="control-overlay" style={overlayStyle}></div>
                         <div className="piece">
                             { pieceIcon }
