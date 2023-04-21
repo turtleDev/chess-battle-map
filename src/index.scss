@@ -81,6 +81,7 @@ code {
 .board {
   display: flex;
   flex-direction: column-reverse;
+  align-items: center;
 }
 
 .rank {
