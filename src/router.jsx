@@ -50,6 +50,8 @@ export default createBrowserRouter([
                                 let gameId = host.pathname.replace('/', '');
                                 const res = await fetch(`https://lichess.org/game/export/${gameId}`);
                                 return { pgn: await res.text() }
+                            default:
+                                return {}
                         }
                     }
                     return null;
