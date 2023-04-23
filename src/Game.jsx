@@ -10,8 +10,9 @@ import {
     faPlay,
     faPause,
 } from '@fortawesome/free-solid-svg-icons';
+import { useLoaderData } from 'react-router-dom';
 
-export default class Game extends React.Component {
+class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,14 +22,9 @@ export default class Game extends React.Component {
         };
         this._engine = null;
         this._autoplayDelay = 1000;
-
-        // hack: load game data from url, if present.
-        // this needs to come via the loader
-        const gameData = (new URL(window.location)).searchParams.get('data');
-        if (gameData) {
-            console.log('found game data in page url, loading ...');
+        if (props?.loaderData?.pgn) {
             setTimeout(() => {
-                document.querySelector('textarea[label=gameData]').innerHTML = atob(gameData);
+                document.querySelector('textarea[label=gameData]').innerHTML = props.loaderData.pgn;
                 document.querySelector('form.game-data-input > input[type=submit]').click();
             }, 0);
         }
@@ -167,3 +163,11 @@ function getRowClass(idx, current) {
     }
     return "";
 }
+
+function GameContainer(props) {
+    const loaderData = useLoaderData();
+    const propsWithData = {...props, loaderData}
+    return <Game {...propsWithData}/>
+}
+
+export default GameContainer;
