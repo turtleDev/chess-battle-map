@@ -104,12 +104,26 @@ class Game extends React.Component {
         }
         return rows;
     }
+    gameTitle() {
+        const alt = "?????";
+        const metadata = this._engine?.headers() ?? {};
+        const white = metadata["White"] ?? alt;
+        const black = metadata["Black"] ?? alt;
+        const date = metadata["Date"] ?? "...."
+        return (
+            <div className="my-4 text-center">
+                <h1 className="text-2xl font-bold">{white} vs {black}</h1>
+                <p>{date}</p>
+            </div>
+        );
+    }
     render() {
         const gameDataAvailable = Object.keys(this.state.board).length !== 0;
         const { autoPlayId, showSource } = this.state;
         return (
-            <div className="game mt-10">
+            <div className="game">
                 <div className="game-container relative">
+                    {this.gameTitle()}
                     <div className="board-container">
                         <Board state={this.state.board}/>
                         {gameDataAvailable &&

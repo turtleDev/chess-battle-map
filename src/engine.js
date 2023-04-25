@@ -12,6 +12,11 @@ class Engine {
         }
         this._chess = chess;
         this._history = this._chess.history();
+
+        // reset() clears the headers for some reason
+        // so we save it in advance
+        this._header = this._chess.header();
+        
         this._chess.reset();
         this._nextMove = 0;
     }
@@ -20,6 +25,9 @@ class Engine {
             moves: Array.from(this._history),
             current: this._nextMove - 1
         }
+    }
+    headers() {
+        return this._header;
     }
     state() {
         let board = newEmptyBoard();
