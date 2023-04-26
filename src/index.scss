@@ -3,12 +3,15 @@
 @tailwind components;
 
 
+// https://github.com/tailwindlabs/tailwindcss/issues/8806
 @layer components {
   .btn {
     @apply px-4 py-2 mt-4 border rounded font-bold bg-[var(--primary)] text-[var(--secondary)] border-2 border-[var(--primary)];
+    _bug: 'fix';
   }
   .btn-inverted {
-    @apply btn bg-[var(--secondary)] text-[var(--primary)] border-2 border-[var(--primary)] hover:bg-[var(--secondary)]
+    @apply btn bg-[var(--secondary)] text-[var(--primary)] border-2 border-[var(--primary)] hover:bg-[var(--secondary)];
+    _bug: 'fix';
   }
 }
 
