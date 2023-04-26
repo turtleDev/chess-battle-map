@@ -16,7 +16,7 @@ class Engine {
         // reset() clears the headers for some reason
         // so we save it in advance
         this._header = this._chess.header();
-        
+
         this._chess.reset();
         this._nextMove = 0;
     }
