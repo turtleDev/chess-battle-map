@@ -42,7 +42,7 @@ export default function Home() {
                             </button>
                         </Link>
                         <button className='btn-inverted md:px-8 md:py-5 my-6'>
-                            <a href="https://github.com/turtleDev/chess-battle-map" target="_blank">
+                            <a href="https://github.com/turtleDev/chess-battle-map" target="_blank" rel="noreferrer">
                                 <FontAwesomeIcon className="mr-4" icon={faGithub}/>
                                 source
                             </a>
