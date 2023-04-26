@@ -5,7 +5,10 @@
 
 @layer components {
   .btn {
-    @apply px-4 py-2 mt-4 border rounded font-bold bg-[var(--primary)] text-[var(--secondary)] border-0;
+    @apply px-4 py-2 mt-4 border rounded font-bold bg-[var(--primary)] text-[var(--secondary)] border-2 border-[var(--primary)];
+  }
+  .btn-inverted {
+    @apply btn bg-[var(--secondary)] text-[var(--primary)] border-2 border-[var(--primary)] hover:bg-[var(--secondary)]
   }
 }
 
