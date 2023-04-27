@@ -3,6 +3,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Outlet, Link, Form, useNavigation } from "react-router-dom";
 import { useState } from "react";
 
+function Loader() {
+    return (
+        <div className="flex flex-col h-[30rem] md:h-[40rem] justify-center items-center">
+            <span className="loader"></span>
+            <p>loading...</p>
+        </div>
+    );
+}
+
 export default function Base() {
     let [value, setValue] = useState('');
     let nav = useNavigation();
@@ -20,7 +29,10 @@ export default function Base() {
                     <input className="btn mt-0 text-3xl rounded-none hover:cursor-pointer" type="submit" value="start"></input>
                 </Form>
             </div>
-            <Outlet/>
+            {
+                nav.state === "loading"?
+                <Loader/>:<Outlet/>
+            }
         </div>
     );
 }
