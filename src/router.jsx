@@ -76,14 +76,12 @@ export default createBrowserRouter([
                         let res = null;
                         switch (host.host) {
                             case 'lichess.org':
-                                console.info('detected lichess link. calling lichess apis to fetch PGN')
-                                let gameId = host.pathname.replace('/', '');
-                                res = await fetch(`https://lichess.org/game/export/${gameId}`);
-                                return { pgn: await res.text() }
                             case 'www.chess.com':
-                                console.info('detected chess.com link. calling chess.com apis to fetch game PGN')
                                 res = await fetch(`https://workers.turtledev.in/api/chess-battle-map/pgn?link=${encodeURIComponent(link)}`);
-                                return { pgn: await res.text() }
+                                if (res.ok) {
+                                    return { pgn: await res.text() }
+                                }
+                                throw new Error(`error fetching game PGN: server replied with status ${res.status}`)
                             default:
                                 return {}
                         }
