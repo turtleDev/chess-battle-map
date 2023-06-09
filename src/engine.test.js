@@ -11,7 +11,7 @@ describe('engine', () => {
             c.move('e4');
             const engine = new Engine(c.pgn());
             engine.next();
-            const board = engine.state();
+            const { board } = engine.state();
             expect(board['e4'].piece).toEqual('P');
             expect(board['d5'].controlledBy).toEqual({'e4': 'P'});
             expect(board['f5'].controlledBy).toEqual({'e4': 'P' });
@@ -21,7 +21,7 @@ describe('engine', () => {
             c.move('a3');
             const engine = new Engine(c.pgn());
             engine.next();
-            const board = engine.state();
+            const { board } = engine.state();
             expect(board['a3'].piece).toEqual('P');
             expect(board['b4'].controlledBy).toEqual({'a3': 'P'});
         })
@@ -30,7 +30,7 @@ describe('engine', () => {
             c.move('Nc3');
             const engine = new Engine(c.pgn());
             engine.next();
-            const board = engine.state();
+            const { board } = engine.state();
             expect(board['c3'].piece).toEqual('N');
             let controlledSquares = [
                 'a4', 'b5', 'd5', 'e4', 'e2', 'd1', 'b1', 'a2'
@@ -45,7 +45,7 @@ describe('engine', () => {
             let c = new ChessJS.Chess();
             c.move('e4');
             const engine = new Engine(c.pgn());
-            const board = engine.state();
+            const { board } = engine.state();
             
             // white king
             let controlledSquares = [
@@ -73,7 +73,7 @@ describe('engine', () => {
             c.move('a4');
             const engine = new Engine(c.pgn());
             engine.next();
-            const board = engine.state();
+            const { board } = engine.state();
             expect(board['a4'].piece).toEqual('P');
             expect(board['a5'].controlledBy).toEqual({});
             let controlledSquares = ['a2', 'a3', 'a4', 'b1'];
@@ -89,7 +89,7 @@ describe('engine', () => {
             moves.forEach(m => c.move(m));
             const engine = new Engine(c.pgn());
             moves.forEach(_ => engine.next());
-            const board = engine.state();
+            const { board } = engine.state();
             expect(board['e3'].piece).toEqual('P');
             expect(board['b5'].piece).toEqual('p');
             let controlledSquares = ['e2', 'd3', 'c4', 'b5', 'g2'];
@@ -109,7 +109,7 @@ describe('engine', () => {
             moves.forEach(m => c.move(m));
             const engine = new Engine(c.pgn());
             moves.forEach(_ => engine.next());
-            const board = engine.state();
+            const { board } = engine.state();
             expect(board['e4'].piece).toEqual('P');
             expect(board['e5'].piece).toEqual('p');
             let controlledSquares = [

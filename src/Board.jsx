@@ -13,6 +13,7 @@ import {
 
 class Board extends React.Component {
     render() {
+        console.log(this.props.move)
         return (
             <div className="board">
                 {this.renderRanks()}
@@ -38,7 +39,7 @@ class Board extends React.Component {
             const overlayStyle = this.getOverlayStyle(this.props.state[square]?.controlledBy)
             return (
                 <div key={file} className={`file ${file}`}>
-                    <div className={`square ${cls} w-[calc(calc(100vw-2rem)/8)] h-[calc(calc(100vw-2rem)/8)] md:w-16 md:h-16`}>
+                    <div className={`square ${square} ${cls} w-[calc(calc(100vw-2rem)/8)] h-[calc(calc(100vw-2rem)/8)] md:w-16 md:h-16`}>
                         <div className="control-overlay" style={overlayStyle}></div>
                         <div className="piece">
                             { pieceIcon }
@@ -47,6 +48,27 @@ class Board extends React.Component {
                 </div>
             );
         });
+    }
+    componentDidUpdate() {
+        if (!this.props.move?.to) {
+            return
+        }
+        this.animateMove();
+    }
+    animateMove() {
+        const fromSquare = document.querySelector(`.square.${this.props.move.from}`)
+        const piece = document.querySelector(`.square.${this.props.move.to} .piece`)
+
+        const originalOffsetTop = piece.offsetTop;
+        const originalOffsetLeft = piece.offsetLeft;
+
+        piece.style.left = `${fromSquare.offsetLeft + (fromSquare.offsetWidth/2) - (piece.offsetWidth/2)}px`;
+        piece.style.top = `${fromSquare.offsetTop + (fromSquare.offsetHeight/2) - (piece.offsetHeight/2)}px`;
+        piece.style.transition = `400ms all`;
+        setTimeout(() => {
+            piece.style.left = `${originalOffsetLeft}px`;
+            piece.style.top = `${originalOffsetTop}px`;
+        }, 0)
     }
     getPieceIcon(piece) {
         if(!piece) {

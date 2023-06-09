@@ -19,6 +19,7 @@ class Engine {
 
         this._chess.reset();
         this._nextMove = 0;
+        this._lastMoveDetails = null;
     }
     history() {
         return {
@@ -41,19 +42,24 @@ class Engine {
             }
             board[sq.square].piece = piece;
         });
-        return withSquareControl(board);
+        return {
+            board: withSquareControl(board),
+            move: this._lastMoveDetails
+        }
     }
     next() {
         let move = this._history[this._nextMove];
         if (move) {
-            this._chess.move(move);
+            let moveDetails = this._chess.move(move);
+            this._lastMoveDetails = moveDetails;
             this._nextMove++;
         }
         return this.state();
     }
     prev() {
-        let move = this._chess.undo()?.san;
-        if (move) {
+        let moveDetails = this._chess.undo()?.san;
+        if (moveDetails) {
+            this._lastMoveDetails = moveDetails;
             --this._nextMove;
         }
         return this.state();
@@ -66,7 +72,8 @@ class Engine {
             this._chess.reset();
             for (let i = 0; i < moveIdx; i++) {
                 let move = this._history[i];
-                this._chess.move(move);
+                const moveDetails = this._chess.move(move);
+                this._lastMoveDetails = moveDetails;
             }
             this._nextMove = moveIdx;
         }
