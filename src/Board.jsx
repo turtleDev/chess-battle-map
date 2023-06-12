@@ -13,7 +13,6 @@ import {
 
 class Board extends React.Component {
     render() {
-        console.log(this.props.move)
         return (
             <div className="board">
                 {this.renderRanks()}
@@ -50,12 +49,14 @@ class Board extends React.Component {
         });
     }
     componentDidUpdate() {
-        if (!this.props.move?.to) {
-            return
-        }
         this.animateMove();
     }
     animateMove() {
+
+        if (!this.props.move) {
+            return
+        }
+
         const fromSquare = document.querySelector(`.square.${this.props.move.from}`)
         const piece = document.querySelector(`.square.${this.props.move.to} .piece`)
 
@@ -64,11 +65,12 @@ class Board extends React.Component {
 
         piece.style.left = `${fromSquare.offsetLeft + (fromSquare.offsetWidth/2) - (piece.offsetWidth/2)}px`;
         piece.style.top = `${fromSquare.offsetTop + (fromSquare.offsetHeight/2) - (piece.offsetHeight/2)}px`;
-        piece.style.transition = `400ms all`;
+        piece.style.transition = `300ms all`;
+
         setTimeout(() => {
             piece.style.left = `${originalOffsetLeft}px`;
             piece.style.top = `${originalOffsetTop}px`;
-        }, 0)
+        }, 0);
     }
     getPieceIcon(piece) {
         if(!piece) {

@@ -11,12 +11,12 @@ const ANIMATION_INTERVAL = 900;
 export default function Home() {
     const src = "1. e4 c5";
     const engine = useMemo(() => new Engine(src), []);
-    const [boardState, setBoardState] = useState(engine.state().board);
+    const [boardState, setBoardState] = useState(engine.state());
     useEffect(() => {
         const moves = src.split(" ").length;
         for (let i = 0; i < moves; i++) {
             setTimeout(() => {
-                setBoardState(engine.next().board);
+                setBoardState(engine.next());
             }, ANIMATION_INTERVAL * (i+1));
         }
     }, [engine])
@@ -24,7 +24,7 @@ export default function Home() {
     return (
         <div className="home">
             <div className="flex flex-col lg:flex-row justify-around max-w-6xl mx-auto my-8">
-                <Board state={boardState}/>
+                <Board state={boardState.board} move={boardState.move}/>
                 <div className="flex flex-col justify-center mt-4 lg:mt-0 md:mt-10 md:mx-24 lg:mx-12">
                     <p className="text-4xl font-bold md:text-6xl lg:text-8xl">!!</p>
                     <p className="text-xl md:text-3xl xl:text-4xl mt-2 md:mt-6 lg:mt-8">

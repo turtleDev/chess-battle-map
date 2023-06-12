@@ -57,7 +57,7 @@ class Engine {
         return this.state();
     }
     prev() {
-        let moveDetails = this._chess.undo()?.san;
+        let moveDetails = this._chess.undo();
         if (moveDetails) {
             this._lastMoveDetails = moveDetails;
             --this._nextMove;
