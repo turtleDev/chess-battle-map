@@ -89,10 +89,12 @@ class Game extends React.Component {
         const id = setInterval(this.handleNext, this._autoplayDelay);
         this.setState({autoPlayId: id});
     }
+
     history() {
         if (!this._engine) {
             return null;
         }
+        // this can be a prop?
         const hist = this._engine.history();
         let rows = [];
         for ( let i = 0; i < hist.moves.length; i += 2) {

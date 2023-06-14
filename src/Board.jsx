@@ -1,4 +1,5 @@
 import React from "react";
+import Engine from "./engine";
 import { Ranks, Files } from './coordinates'
 import { isBlack } from "./piece";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -59,10 +60,15 @@ class Board extends React.Component {
             return
         }
 
-        const fromSquare = document.querySelector(`.square.${this.props.move.from}`)
-        const toSquare = document.querySelector(`.square.${this.props.move.to}`)
-        const piece = document.querySelector(`.square.${this.props.move.to} .piece`)
+        let fromSquare = document.querySelector(`.square.${this.props.move.from}`)
+        let toSquare = document.querySelector(`.square.${this.props.move.to}`)
+        // const piece = document.querySelector(`.square.${this.props.move.to} .piece`)
 
+        if (this.props.move.dir === Engine.Direction.Backward) {
+            [fromSquare, toSquare] = [fromSquare, toSquare].reverse();
+        }
+        
+        const piece = toSquare.querySelector('.piece');
         const pos = getCenteredPosition(piece, fromSquare);
         piece.style.left = `${pos.x}px`;
         piece.style.top = `${pos.y}px`;

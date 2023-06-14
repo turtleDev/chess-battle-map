@@ -50,30 +50,33 @@ class Engine {
     next() {
         let move = this._history[this._nextMove];
         if (move) {
-            let moveDetails = this._chess.move(move);
-            this._lastMoveDetails = moveDetails;
+            const moveDetails = this._chess.move(move);
+            this._lastMoveDetails = {...moveDetails, dir: Engine.Direction.Forward};
             this._nextMove++;
         }
         return this.state();
     }
     prev() {
-        let moveDetails = this._chess.undo();
+        const moveDetails = this._chess.undo();
         if (moveDetails) {
-            this._lastMoveDetails = moveDetails;
+            this._lastMoveDetails = {...moveDetails, dir: Engine.Direction.Backward};
             --this._nextMove;
         }
         return this.state();
     }
+    // todo: direction
     seek(moveIdx) {
+        let dir = Engine.Direction.Forward;
         if (moveIdx < 0) {
             moveIdx = this._history.length + moveIdx;
+            dir = Engine.Direction.Backward;
         }
         if (moveIdx < this._history.length && moveIdx >= 0) {
             this._chess.reset();
             for (let i = 0; i < moveIdx; i++) {
                 let move = this._history[i];
                 const moveDetails = this._chess.move(move);
-                this._lastMoveDetails = moveDetails;
+                this._lastMoveDetails = {...moveDetails, dir};
             }
             this._nextMove = moveIdx;
         }
@@ -83,6 +86,11 @@ class Engine {
         return this._history.length === this._nextMove;
     }
 }
+
+Engine.Direction = {
+    Forward: 'f',
+    Backward: 'b',
+};
 
 function withSquareControl(src) {
     const board = JSON.parse(JSON.stringify(src));

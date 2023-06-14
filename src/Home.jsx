@@ -13,7 +13,7 @@ export default function Home() {
     const engine = useMemo(() => new Engine(src), []);
     const [boardState, setBoardState] = useState(engine.state());
     useEffect(() => {
-        const moves = src.split(" ").length -1;
+        const moves = src.split(" ").length - 1;
         for (let i = 0; i < moves; i++) {
             setTimeout(() => {
                 setBoardState(engine.next());
