@@ -62,7 +62,6 @@ class Board extends React.Component {
 
         let fromSquare = document.querySelector(`.square.${this.props.move.from}`)
         let toSquare = document.querySelector(`.square.${this.props.move.to}`)
-        // const piece = document.querySelector(`.square.${this.props.move.to} .piece`)
 
         if (this.props.move.dir === Engine.Direction.Backward) {
             [fromSquare, toSquare] = [fromSquare, toSquare].reverse();
