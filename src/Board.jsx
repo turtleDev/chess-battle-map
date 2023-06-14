@@ -12,6 +12,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 class Board extends React.Component {
+    ANIMATION_DURATION = 300;
+
     render() {
         return (
             <div className="board">
@@ -49,7 +51,7 @@ class Board extends React.Component {
         });
     }
     componentDidUpdate() {
-        this.animateMove();
+        requestAnimationFrame(() => this.animateMove());
     }
     animateMove() {
 
@@ -58,22 +60,22 @@ class Board extends React.Component {
         }
 
         const fromSquare = document.querySelector(`.square.${this.props.move.from}`)
+        const toSquare = document.querySelector(`.square.${this.props.move.to}`)
         const piece = document.querySelector(`.square.${this.props.move.to} .piece`)
 
-        const originalOffsetTop = piece.offsetTop;
-        const originalOffsetLeft = piece.offsetLeft;
-
-        piece.style.left = `${fromSquare.offsetLeft + (fromSquare.offsetWidth/2) - (piece.offsetWidth/2)}px`;
-        piece.style.top = `${fromSquare.offsetTop + (fromSquare.offsetHeight/2) - (piece.offsetHeight/2)}px`;
+        const pos = getCenteredPosition(piece, fromSquare);
+        piece.style.left = `${pos.x}px`;
+        piece.style.top = `${pos.y}px`;
 
         setTimeout(() => {
-            piece.style.transition = `300ms all`;
-            piece.style.left = `${originalOffsetLeft}px`;
-            piece.style.top = `${originalOffsetTop}px`;
+            const pos = getCenteredPosition(piece, toSquare);
+            piece.style.transition = `${this.ANIMATION_DURATION}ms all ease-out`;
+            piece.style.left = `${pos.x}px`;
+            piece.style.top = `${pos.y}px`;
             setTimeout(() => {
                 piece.style.transition = 'none';
-            }, 300)
-        }, 50);
+            }, this.ANIMATION_DURATION);
+        }, 0);
     }
     getPieceIcon(piece) {
         if(!piece) {
@@ -131,6 +133,14 @@ const IconMapping = {
     'q': faChessQueen,
     'k': faChessKing,
 };
+
+// computes coordinates for a piece that is centered inside a square
+function getCenteredPosition(piece, square) {
+    return {
+        x: square.offsetLeft + (square.offsetWidth/2) - (piece.offsetWidth/2),
+        y: square.offsetTop + (square.offsetHeight/2) - (piece.offsetHeight/2),
+    }
+}
 
 
 export default Board;
