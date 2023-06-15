@@ -113,7 +113,16 @@ class Game extends React.Component {
                 </tr>
             )
         }
-        return rows;
+        return (
+            <div className="history hidden lg:block absolute top-0 -right-[11rem] max-h-full overflow-y-auto overflow-x-hidden max-h-[97%]">
+                <table>
+                    <tbody>
+                        {rows}
+                    </tbody>
+                </table>
+            </div>
+
+        );
     }
     gameTitle() {
         const alt = "?????";
@@ -168,13 +177,7 @@ class Game extends React.Component {
                         </div>
 
                     </div>
-                    <div className="history hidden lg:block absolute top-0 -right-[11rem]">
-                        <table>
-                            <tbody>
-                                {this.history()}
-                            </tbody>
-                        </table>
-                    </div>
+                    {this.history()}
                 </div>
             </div>
         );
