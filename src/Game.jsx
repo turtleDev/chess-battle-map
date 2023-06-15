@@ -2,7 +2,7 @@ import React from 'react';
 import Board from './Board';
 import Engine from './engine';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
+import {
     faBackwardStep,
     faBackwardFast,
     faForwardStep,
@@ -13,22 +13,38 @@ import {
 import { useLoaderData } from 'react-router-dom';
 
 class Game extends React.Component {
+
+    AUTO_PLAY_DELAY = 1000;
+
     constructor(props) {
         super(props);
         this.state = {
+            src: props?.loaderData?.pgn || '',
+            history: null,
             board: {},
             move: null,
             autoPlayId: null,
             showSource: false,
         };
         this._engine = null;
-        this._autoplayDelay = 1000;
-        if (props?.loaderData?.pgn) {
-            setTimeout(() => {
-                document.querySelector('textarea[label=gameData]').innerHTML = props.loaderData.pgn;
-                document.querySelector('form.game-data-input > input[type=submit]').click();
-            }, 0);
+    }
+    componentDidMount() {
+        this.init(this.state.src);
+    }
+    init(pgn) {
+        if (!pgn) {
+            return
         }
+
+        let engine;
+        try {
+            engine = new Engine(pgn);
+        } catch (e) {
+            console.error(`error parsing game data: ${e}`)
+            throw e;
+        }
+        this.setState(engine.state());
+        this._engine = engine;
     }
     handleStart = e => {
         e.preventDefault();
@@ -36,17 +52,9 @@ class Game extends React.Component {
             .querySelector('textarea[label=gameData]')
             .value
             .trim();
-        
-        let engine;
-        try {
-            engine = new Engine(pgn);
-        } catch(e) {
-            console.error(`error parsing game data: ${e}`)
-            throw e;
-        }
-        const { board, move } = engine.state()
-        this.setState({board, move});
-        this._engine = engine;
+
+        this.init(pgn);
+        window.scrollTo(0, 0);
     }
     handleNext = e => {
 
@@ -75,34 +83,33 @@ class Game extends React.Component {
     }
     stopAutoPlay = _ => {
         let { autoPlayId } = this.state;
-        if ( autoPlayId ) {
+        if (autoPlayId) {
             clearInterval(autoPlayId);
-            this.setState({autoPlayId: null});
+            this.setState({ autoPlayId: null });
         }
     }
     toggleAutoPlay = _ => {
         let { autoPlayId } = this.state;
-        if ( autoPlayId ) {
+        if (autoPlayId) {
             this.stopAutoPlay();
             return;
         }
-        const id = setInterval(this.handleNext, this._autoplayDelay);
-        this.setState({autoPlayId: id});
+        const id = setInterval(this.handleNext, this.AUTO_PLAY_DELAY);
+        this.setState({ autoPlayId: id });
     }
 
     history() {
-        if (!this._engine) {
+        if (!this.state.history) {
             return null;
         }
-        // this can be a prop?
-        const hist = this._engine.history();
+        const hist = this.state.history;
         let rows = [];
-        for ( let i = 0; i < hist.moves.length; i += 2) {
+        for (let i = 0; i < hist.moves.length; i += 2) {
             rows.push(
                 <tr key={i}>
-                    <td>{(i/2) + 1}</td>
+                    <td>{(i / 2) + 1}</td>
                     <td className={getRowClass(i, hist.current)}>{hist.moves[i]}</td>
-                    <td className={getRowClass(i+1, hist.current)}>{hist.moves[i+1]}</td>
+                    <td className={getRowClass(i + 1, hist.current)}>{hist.moves[i + 1]}</td>
                 </tr>
             )
         }
@@ -129,34 +136,34 @@ class Game extends React.Component {
                 <div className="game-container relative">
                     {this.gameTitle()}
                     <div className="board-container">
-                        <Board state={this.state.board} move={this.state.move}/>
+                        <Board state={this.state.board} move={this.state.move} />
                         {gameDataAvailable &&
                             <div className="controls">
-                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x"/>
-                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faBackwardStep} onClick={this.handlePrev} size="2x"/>
+                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x" />
+                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faBackwardStep} onClick={this.handlePrev} size="2x" />
                                 <FontAwesomeIcon
-                                    className="hover:cursor-pointer" 
-                                    icon={autoPlayId?faPause:faPlay} 
+                                    className="hover:cursor-pointer"
+                                    icon={autoPlayId ? faPause : faPlay}
                                     onClick={this.toggleAutoPlay}
                                     size="2x"
                                 />
-                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faForwardStep} onClick={this.handleNext} size="2x"/>
-                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faForwardFast} onClick={this.handleGotoLast} size="2x"/>
+                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faForwardStep} onClick={this.handleNext} size="2x" />
+                                <FontAwesomeIcon className="hover:cursor-pointer" icon={faForwardFast} onClick={this.handleGotoLast} size="2x" />
                             </div>
                         }
 
-                        <button 
-                            className={"btn my-4 w-full " + (showSource?"bg-slate-400":"")}
-                            onClick={() => this.setState({showSource: !showSource})}
+                        <button
+                            className={"btn my-4 w-full " + (showSource ? "bg-slate-400" : "")}
+                            onClick={() => this.setState({ showSource: !showSource })}
                         >
                             view source
                         </button>
-                        <div className={showSource?"":"hidden"}>
-                            <form 
+                        <div className={showSource ? "" : "hidden"}>
+                            <form
                                 className="game-data-input"
                                 onSubmit={this.handleStart}>
-                                    <textarea className="border-2 p-2" label="gameData" rows={10}></textarea>
-                                    <input className="btn" type="submit" label="start"></input>
+                                <textarea className="border-2 p-2" label="gameData" rows={10} defaultValue={this.state.src}></textarea>
+                                <input className="btn" type="submit" label="start"></input>
                             </form>
                         </div>
 
@@ -184,8 +191,8 @@ function getRowClass(idx, current) {
 
 function GameContainer(props) {
     const loaderData = useLoaderData();
-    const propsWithData = {...props, loaderData}
-    return <Game {...propsWithData}/>
+    const propsWithData = { ...props, loaderData }
+    return <Game {...propsWithData} />
 }
 
 export default GameContainer;
