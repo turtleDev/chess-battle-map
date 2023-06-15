@@ -1,4 +1,5 @@
 import React from "react";
+import Engine from "./engine";
 import { Ranks, Files } from './coordinates'
 import { isBlack } from "./piece";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +13,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 class Board extends React.Component {
+    ANIMATION_DURATION = 300;
+
     render() {
         return (
             <div className="board">
@@ -38,7 +41,7 @@ class Board extends React.Component {
             const overlayStyle = this.getOverlayStyle(this.props.state[square]?.controlledBy)
             return (
                 <div key={file} className={`file ${file}`}>
-                    <div className={`square ${cls} w-[calc(calc(100vw-2rem)/8)] h-[calc(calc(100vw-2rem)/8)] md:w-16 md:h-16`}>
+                    <div className={`square ${square} ${cls} w-[calc(calc(100vw-2rem)/8)] h-[calc(calc(100vw-2rem)/8)] md:w-16 md:h-16`}>
                         <div className="control-overlay" style={overlayStyle}></div>
                         <div className="piece">
                             { pieceIcon }
@@ -47,6 +50,37 @@ class Board extends React.Component {
                 </div>
             );
         });
+    }
+    componentDidUpdate() {
+        requestAnimationFrame(() => this.animateMove());
+    }
+    animateMove() {
+
+        if (!this.props.move) {
+            return
+        }
+
+        let fromSquare = document.querySelector(`.square.${this.props.move.from}`)
+        let toSquare = document.querySelector(`.square.${this.props.move.to}`)
+
+        if (this.props.move.dir === Engine.Direction.Backward) {
+            [fromSquare, toSquare] = [fromSquare, toSquare].reverse();
+        }
+        
+        const piece = toSquare.querySelector('.piece');
+        const pos = getCenteredPosition(piece, fromSquare);
+        piece.style.left = `${pos.x}px`;
+        piece.style.top = `${pos.y}px`;
+
+        setTimeout(() => {
+            const pos = getCenteredPosition(piece, toSquare);
+            piece.style.transition = `${this.ANIMATION_DURATION}ms all ease-out`;
+            piece.style.left = `${pos.x}px`;
+            piece.style.top = `${pos.y}px`;
+            setTimeout(() => {
+                piece.style.transition = 'none';
+            }, this.ANIMATION_DURATION);
+        }, 0);
     }
     getPieceIcon(piece) {
         if(!piece) {
@@ -104,6 +138,14 @@ const IconMapping = {
     'q': faChessQueen,
     'k': faChessKing,
 };
+
+// computes coordinates for a piece that is centered inside a square
+function getCenteredPosition(piece, square) {
+    return {
+        x: square.offsetLeft + (square.offsetWidth/2) - (piece.offsetWidth/2),
+        y: square.offsetTop + (square.offsetHeight/2) - (piece.offsetHeight/2),
+    }
+}
 
 
 export default Board;

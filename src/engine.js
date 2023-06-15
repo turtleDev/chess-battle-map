@@ -19,6 +19,7 @@ class Engine {
 
         this._chess.reset();
         this._nextMove = 0;
+        this._lastMoveDetails = null;
     }
     history() {
         return {
@@ -41,32 +42,40 @@ class Engine {
             }
             board[sq.square].piece = piece;
         });
-        return withSquareControl(board);
+        return {
+            board: withSquareControl(board),
+            move: this._lastMoveDetails
+        }
     }
     next() {
         let move = this._history[this._nextMove];
         if (move) {
-            this._chess.move(move);
+            const moveDetails = this._chess.move(move);
+            this._lastMoveDetails = {...moveDetails, dir: Engine.Direction.Forward};
             this._nextMove++;
         }
         return this.state();
     }
     prev() {
-        let move = this._chess.undo()?.san;
-        if (move) {
+        const moveDetails = this._chess.undo();
+        if (moveDetails) {
+            this._lastMoveDetails = {...moveDetails, dir: Engine.Direction.Backward};
             --this._nextMove;
         }
         return this.state();
     }
     seek(moveIdx) {
+        let dir = Engine.Direction.Forward;
         if (moveIdx < 0) {
             moveIdx = this._history.length + moveIdx;
+            dir = Engine.Direction.Backward;
         }
         if (moveIdx < this._history.length && moveIdx >= 0) {
             this._chess.reset();
             for (let i = 0; i < moveIdx; i++) {
                 let move = this._history[i];
-                this._chess.move(move);
+                const moveDetails = this._chess.move(move);
+                this._lastMoveDetails = {...moveDetails, dir};
             }
             this._nextMove = moveIdx;
         }
@@ -76,6 +85,11 @@ class Engine {
         return this._history.length === this._nextMove;
     }
 }
+
+Engine.Direction = {
+    Forward: 'f',
+    Backward: 'b',
+};
 
 function withSquareControl(src) {
     const board = JSON.parse(JSON.stringify(src));

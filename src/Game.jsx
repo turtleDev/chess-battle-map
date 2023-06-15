@@ -17,6 +17,7 @@ class Game extends React.Component {
         super(props);
         this.state = {
             board: {},
+            move: null,
             autoPlayId: null,
             showSource: false,
         };
@@ -43,7 +44,8 @@ class Game extends React.Component {
             console.error(`error parsing game data: ${e}`)
             throw e;
         }
-        this.setState({board: engine.state()});
+        const { board, move } = engine.state()
+        this.setState({board, move});
         this._engine = engine;
     }
     handleNext = e => {
@@ -54,22 +56,22 @@ class Game extends React.Component {
         if (e) {
             this.stopAutoPlay();
         }
-        this.setState({board: this._engine.next()});
+        this.setState(this._engine.next());
         if (this._engine.isGameEnd()) {
             this.stopAutoPlay();
         }
     }
     handlePrev = _ => {
         this.stopAutoPlay();
-        this.setState({board: this._engine.prev()});
+        this.setState(this._engine.prev());
     }
     handleGotoFirst = _ => {
         this.stopAutoPlay();
-        this.setState({board: this._engine.seek(0)});
+        this.setState(this._engine.seek(0));
     }
     handleGotoLast = _ => {
         this.stopAutoPlay();
-        this.setState({board: this._engine.seek(-1)});
+        this.setState(this._engine.seek(-1));
     }
     stopAutoPlay = _ => {
         let { autoPlayId } = this.state;
@@ -87,10 +89,12 @@ class Game extends React.Component {
         const id = setInterval(this.handleNext, this._autoplayDelay);
         this.setState({autoPlayId: id});
     }
+
     history() {
         if (!this._engine) {
             return null;
         }
+        // this can be a prop?
         const hist = this._engine.history();
         let rows = [];
         for ( let i = 0; i < hist.moves.length; i += 2) {
@@ -125,7 +129,7 @@ class Game extends React.Component {
                 <div className="game-container relative">
                     {this.gameTitle()}
                     <div className="board-container">
-                        <Board state={this.state.board}/>
+                        <Board state={this.state.board} move={this.state.move}/>
                         {gameDataAvailable &&
                             <div className="controls">
                                 <FontAwesomeIcon className="hover:cursor-pointer" icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x"/>
