@@ -64,7 +64,6 @@ class Engine {
         }
         return this.state();
     }
-    // todo: direction
     seek(moveIdx) {
         let dir = Engine.Direction.Forward;
         if (moveIdx < 0) {
