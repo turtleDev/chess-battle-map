@@ -44,7 +44,8 @@ class Engine {
         });
         return {
             board: withSquareControl(board),
-            move: this._lastMoveDetails
+            move: this._lastMoveDetails,
+            history: this.history(),
         }
     }
     next() {

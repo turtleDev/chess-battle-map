@@ -13,30 +13,29 @@ import {
 import { useLoaderData } from 'react-router-dom';
 
 class Game extends React.Component {
+
+    AUTO_PLAY_DELAY = 1000;
+
     constructor(props) {
         super(props);
         this.state = {
+            src: props?.loaderData?.pgn || '',
+            history: null,
             board: {},
             move: null,
             autoPlayId: null,
             showSource: false,
         };
         this._engine = null;
-        this._autoplayDelay = 1000;
-        if (props?.loaderData?.pgn) {
-            setTimeout(() => {
-                document.querySelector('textarea[label=gameData]').innerHTML = props.loaderData.pgn;
-                document.querySelector('form.game-data-input > input[type=submit]').click();
-            }, 0);
-        }
     }
-    handleStart = e => {
-        e.preventDefault();
-        let pgn = e.target
-            .querySelector('textarea[label=gameData]')
-            .value
-            .trim();
-        
+    componentDidMount() {
+        this.init(this.state.src);
+    }
+    init(pgn) {
+        if (!pgn) {
+            return
+        }
+
         let engine;
         try {
             engine = new Engine(pgn);
@@ -44,9 +43,18 @@ class Game extends React.Component {
             console.error(`error parsing game data: ${e}`)
             throw e;
         }
-        const { board, move } = engine.state()
-        this.setState({board, move});
+        this.setState(engine.state());
         this._engine = engine;
+    }
+    handleStart = e => {
+        e.preventDefault();
+        let pgn = e.target
+            .querySelector('textarea[label=gameData]')
+            .value
+            .trim();
+
+        this.init(pgn);
+        window.scrollTo(0, 0);
     }
     handleNext = e => {
 
@@ -86,16 +94,15 @@ class Game extends React.Component {
             this.stopAutoPlay();
             return;
         }
-        const id = setInterval(this.handleNext, this._autoplayDelay);
+        const id = setInterval(this.handleNext, this.AUTO_PLAY_DELAY);
         this.setState({autoPlayId: id});
     }
 
     history() {
-        if (!this._engine) {
+        if(!this.state.history) {
             return null;
         }
-        // this can be a prop?
-        const hist = this._engine.history();
+        const hist = this.state.history;
         let rows = [];
         for ( let i = 0; i < hist.moves.length; i += 2) {
             rows.push(
@@ -155,7 +162,7 @@ class Game extends React.Component {
                             <form 
                                 className="game-data-input"
                                 onSubmit={this.handleStart}>
-                                    <textarea className="border-2 p-2" label="gameData" rows={10}></textarea>
+                                    <textarea className="border-2 p-2" label="gameData" rows={10} defaultValue={this.state.src}></textarea>
                                     <input className="btn" type="submit" label="start"></input>
                             </form>
                         </div>
