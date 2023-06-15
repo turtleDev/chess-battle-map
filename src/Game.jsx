@@ -31,6 +31,35 @@ class Game extends React.Component {
     componentDidMount() {
         this.init(this.state.src);
     }
+    componentDidUpdate() {
+        this.adjustHistoryScroll()
+    }
+    adjustHistoryScroll() {
+        const history = document.querySelector(".history");
+        const move = history.querySelector(".current-move")
+        if (!move) {
+            history.scroll(0,0);
+            return;
+        }
+
+        const viewBox = {
+            bottom: history.offsetTop + history.offsetHeight,
+            top: history.offsetTop + history.scrollTop
+        }
+        const moveBox = {
+            bottom: move.offsetTop + move.offsetHeight,
+            top: move.offsetTop
+        }
+
+
+        if (moveBox.bottom > viewBox.bottom) {
+            history.scrollBy(0, moveBox.bottom-viewBox.bottom);
+        }
+        if (moveBox.top < viewBox.top) {
+            history.scrollBy(0, moveBox.top-viewBox.top)
+        }
+        
+    }
     init(pgn) {
         if (!pgn) {
             return
