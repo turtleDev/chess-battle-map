@@ -36,29 +36,39 @@ class Game extends React.Component {
     }
     adjustHistoryScroll() {
         const history = document.querySelector(".history");
-        const move = history.querySelector(".current-move")
+        const move = history.querySelector(".current-move-row")
         if (!move) {
-            history.scroll(0,0);
+            history.scroll(0, 0);
             return;
         }
 
         const viewBox = {
-            bottom: history.offsetTop + history.offsetHeight,
-            top: history.offsetTop + history.scrollTop
+            bottom: history.offsetHeight + history.scrollTop,
+            top: history.scrollTop,
+            right: history.offsetWidth + history.scrollLeft,
+            left: history.scrollLeft
         }
         const moveBox = {
             bottom: move.offsetTop + move.offsetHeight,
-            top: move.offsetTop
+            top: move.offsetTop,
+            right: move.offsetLeft + move.offsetWidth,
+            left: move.offsetLeft
         }
 
 
         if (moveBox.bottom > viewBox.bottom) {
-            history.scrollBy(0, moveBox.bottom-viewBox.bottom);
+            history.scrollBy(0, moveBox.bottom - viewBox.bottom);
         }
         if (moveBox.top < viewBox.top) {
-            history.scrollBy(0, moveBox.top-viewBox.top)
+            history.scrollBy(0, moveBox.top - viewBox.top);
         }
-        
+        if (moveBox.right > viewBox.right) {
+            history.scrollBy(moveBox.right - viewBox.right, 0);
+        }
+        if (moveBox.left < viewBox.left) {
+            history.scrollBy(moveBox.left - viewBox.left, 0);
+        }
+
     }
     init(pgn) {
         if (!pgn) {
@@ -131,21 +141,26 @@ class Game extends React.Component {
         if (!this.state.history) {
             return null;
         }
+
+        const getMoveClass = (idx, current) => idx === current ? "current-move" : "";
+        const getRowClass = (idx, current) =>
+            (idx === current || idx + 1 === current) ? "current-move-row" : "";
+
         const hist = this.state.history;
         let rows = [];
         for (let i = 0; i < hist.moves.length; i += 2) {
             rows.push(
-                <tr key={i}>
+                <tr className={getRowClass(i, hist.current)} key={i}>
                     <td>{(i / 2) + 1}</td>
-                    <td className={getRowClass(i, hist.current)}>{hist.moves[i]}</td>
-                    <td className={getRowClass(i + 1, hist.current)}>{hist.moves[i + 1]}</td>
+                    <td className={getMoveClass(i, hist.current)}>{hist.moves[i]}</td>
+                    <td className={getMoveClass(i + 1, hist.current)}>{hist.moves[i + 1]}</td>
                 </tr>
             )
         }
         return (
-            <div className="history hidden lg:block absolute top-0 -right-[11rem] max-h-full overflow-y-auto overflow-x-hidden max-h-[97%]">
+            <div className="history select-none lg:block lg:absolute my-[1rem] lg:top-2rem lg:-right-[11rem] overflow-y-auto w-[calc(100vw-2rem)] lg:w-auto overflow-x-auto lg:overflow-x-hidden lg:h-[32rem]">
                 <table>
-                    <tbody>
+                    <tbody className="flex lg:table-row-group">
                         {rows}
                     </tbody>
                 </table>
@@ -174,7 +189,10 @@ class Game extends React.Component {
                 <div className="game-container relative">
                     {this.gameTitle()}
                     <div className="board-container">
-                        <Board state={this.state.board} move={this.state.move} />
+                        <div className="flex flex-col lg:flex-row">
+                            <Board state={this.state.board} move={this.state.move} />
+                            {this.history()}
+                        </div>
                         {gameDataAvailable &&
                             <div className="controls">
                                 <FontAwesomeIcon className="hover:cursor-pointer" icon={faBackwardFast} onClick={this.handleGotoFirst} size="2x" />
@@ -191,7 +209,7 @@ class Game extends React.Component {
                         }
 
                         <button
-                            className={"btn my-4 w-full " + (showSource ? "bg-slate-400" : "")}
+                            className={"btn my-4 w-full select-none " + (showSource ? "bg-slate-400" : "")}
                             onClick={() => this.setState({ showSource: !showSource })}
                         >
                             view source
@@ -206,7 +224,6 @@ class Game extends React.Component {
                         </div>
 
                     </div>
-                    {this.history()}
                 </div>
             </div>
         );
@@ -214,12 +231,6 @@ class Game extends React.Component {
 }
 
 
-function getRowClass(idx, current) {
-    if (idx === current) {
-        return "current-move";
-    }
-    return "";
-}
 
 function GameContainer(props) {
     const loaderData = useLoaderData();
