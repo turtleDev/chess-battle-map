@@ -158,7 +158,7 @@ class Game extends React.Component {
             )
         }
         return (
-            <div className="history select-none lg:block lg:absolute my-[1rem] lg:top-2rem lg:-right-[11rem] overflow-y-auto w-[calc(100vw-2rem)] lg:w-auto overflow-x-auto lg:overflow-x-hidden lg:h-[32rem]">
+            <div className="history select-none lg:block lg:absolute my-[1rem] lg:my-0 lg:top-2rem lg:-right-[11rem] overflow-y-auto w-[calc(100vw-2rem)] lg:w-auto overflow-x-auto lg:overflow-x-hidden lg:h-[32rem]">
                 <table>
                     <tbody className="flex lg:table-row-group">
                         {rows}
