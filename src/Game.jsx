@@ -151,7 +151,7 @@ class Game extends React.Component {
         for (let i = 0; i < hist.moves.length; i += 2) {
             rows.push(
                 <tr className={getRowClass(i, hist.current)} key={i}>
-                    <td>{(i / 2) + 1}</td>
+                    <td>{`${(i/2) + 1}.`}</td>
                     <td className={getMoveClass(i, hist.current)}>{hist.moves[i]}</td>
                     <td className={getMoveClass(i + 1, hist.current)}>{hist.moves[i + 1]}</td>
                 </tr>
