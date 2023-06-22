@@ -109,12 +109,21 @@ class Board extends React.Component {
             }
         })
         if (control > 0) {
-            return {backgroundColor: `RGBA(255, 0, 0, ${controlIntensity(control)})`};
+            return {
+                backgroundColor: 'var(--white-controls)',
+                opacity: controlIntensity(control),
+            };
         }
         if (control < 0) {
-            return {backgroundColor: `RGBA(0, 255, 255, ${controlIntensity(control)})`};
+            return {
+                backgroundColor: 'var(--black-controls)',
+                opacity: controlIntensity(control),
+            };
         }
-        return {backgroundColor: 'RGBA(100, 50, 150, 0.4)'};
+        return {
+            backgroundColor: 'var(--both-control)',
+            opacity: 0.4
+        };
     }
 }
 
