@@ -90,7 +90,7 @@ class Board extends React.Component {
         if (!icon) {
             return null;
         }
-        const color = isBlack(piece)?"darkslategrey":"whitesmoke";
+        const color = isBlack(piece)?"var(--piece-black)":"var(--piece-white)";
         return <FontAwesomeIcon icon={icon} color={color} size="2x"/>;
     }
 

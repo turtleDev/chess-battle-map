@@ -18,7 +18,10 @@
 :root {
   --primary: black;
   --secondary: white;
-
+  --piece-white: whitesmoke;
+  --piece-black: darkslategrey;
+  --square-light: #f0ddb2;
+  --square-dark: #b8895f;
   // pink
   // --primary: #797596;
   // --secondary: #A1869E;
@@ -101,11 +104,11 @@ code {
   color: black;
 
   &.light {
-    background-color: #f0ddb2;
+    background-color: var(--square-light);
   }
 
   &.dark {
-    background-color: #b8895f;
+    background-color: var(--square-dark);
   }
 
   .control-overlay {
