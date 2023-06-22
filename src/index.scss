@@ -19,7 +19,7 @@
   --primary: black;
   --secondary: white;
   --piece-white: whitesmoke;
-  --piece-black: darkslategrey;
+  --piece-black: rgba(0, 0, 0, 0.8);
   --square-light: #f0ddb2;
   --square-dark: #b8895f;
   --white-controls: red;
@@ -112,6 +112,13 @@ code {
 
   &.dark {
     background-color: var(--square-dark);
+  }
+
+  // too add outline to font-awesome piece icons
+  path {
+    stroke: rgb(0, 0, 0, 0.9);
+    stroke-width: 1rem;
+    stroke-linejoin: round;
   }
 
   .control-overlay {
