@@ -27,6 +27,18 @@ class Game extends React.Component {
             showSource: false,
         };
         this._engine = null;
+        document.onkeyup = (e) => {
+            switch (e.code) {
+                case 'ArrowRight':
+                    this.handleNext();
+                    break;
+                case 'ArrowLeft':
+                    this.handlePrev();
+                    break;
+                default:
+                    return
+            }
+        }
     }
     componentDidMount() {
         this.init(this.state.src);
@@ -208,20 +220,16 @@ class Game extends React.Component {
                             </div>
                         }
 
+                        <div className={showSource ? "w-full" : "hidden"}>
+                            <textarea className="border-2 p-2 w-full" label="gameData" rows={10} defaultValue={this.state.src}></textarea>
+                        </div>
+
                         <button
-                            className={"btn my-4 w-full select-none " + (showSource ? "bg-slate-400" : "")}
+                            className={"btn my-4 w-full select-none"}
                             onClick={() => this.setState({ showSource: !showSource })}
                         >
-                            view source
+                            {showSource?"Hide PGN":"Show PGN"}
                         </button>
-                        <div className={showSource ? "" : "hidden"}>
-                            <form
-                                className="game-data-input"
-                                onSubmit={this.handleStart}>
-                                <textarea className="border-2 p-2" label="gameData" rows={10} defaultValue={this.state.src}></textarea>
-                                <input className="btn" type="submit" label="start"></input>
-                            </form>
-                        </div>
 
                     </div>
                 </div>
