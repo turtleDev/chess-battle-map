@@ -122,7 +122,7 @@ class Board extends React.Component {
         }
         return {
             backgroundColor: 'var(--both-control)',
-            opacity: 0.4
+            opacity: 0.4,
         };
     }
 }
@@ -135,8 +135,8 @@ function controlIntensity(control) {
     if (control > max) {
         control = max;
     }
-    control = control / 10;
-    return 0.1 + control;
+    control = control / 10 * 2;
+    return 0.05 + control;
 }
 
 const IconMapping = {

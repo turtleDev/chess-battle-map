@@ -20,9 +20,9 @@
   --secondary: white;
   --piece-white: whitesmoke;
   --piece-black: rgba(0, 0, 0, 0.8);
-  --square-light: #f0ddb2;
-  --square-dark: #b8895f;
-  --white-controls: red;
+  --square-light: white;
+  --square-dark: white;
+  --white-controls: orange;
   --black-controls: rgb(0, 255, 255);
   --both-control: purple;
   // pink
@@ -100,6 +100,19 @@ code {
 }
 
 
+.rank:nth-last-child(1) {
+  border-top: 1px solid black;
+}
+
+.rank .file:nth-child(1) {
+  border-left: 1px solid black;
+}
+
+.square {
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+}
+
 .square {
   display: flex;
   justify-content: center;
@@ -112,6 +125,7 @@ code {
 
   &.dark {
     background-color: var(--square-dark);
+    
   }
 
   // too add outline to font-awesome piece icons
